@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Title: TradeSkillWhisperLookup
-## Notes: TradeSkillWhisperLookup for WoW Classic
+## Notes: Provides other players the ability to lookup your profession tradeskills by whisper command
 ## Author: mwiemarc aka Maxhealth-Venoxis
 ## Version: 0.1.2-beta
 ## SavedVariablesPerCharacter: TSWL_Professions
