@@ -2,15 +2,15 @@
 ## Title: TradeSkillWhisperLookup
 ## Notes: TradeSkillWhisperLookup for WoW Classic
 ## Author: mwiemarc aka Maxhealth-Venoxis
-## Version: 0.1.0-beta
+## Version: 0.1.2-beta
 ## SavedVariablesPerCharacter: TSWL_Professions
 
 lib\ChatThrottleLib\ChatThrottleLib.xml
-l10n\localization.de.lua
-l10n\localization.en.lua
+localization\localization.de.lua
+localization\localization.en.lua
 defaults.lua
 util.lua
 helpers.lua
-main.lua
+core.lua
 TSWLOptionsPanel.lua
 TSWLOptionsPanel.xml

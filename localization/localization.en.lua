@@ -4,14 +4,21 @@ local LOCALE = GetLocale()
 if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as fallback language
     local L = {}
 
-    L['PROFESSION_NAME_ALCHEMY'] = 'Alchemy'
-    L['PROFESSION_NAME_BLACKSMITHING'] = 'Blacksmithing'
-    L['PROFESSION_NAME_ENCHANTING'] = 'Enchanting'
-    L['PROFESSION_NAME_ENGINEERING'] = 'Engineering'
-    L['PROFESSION_NAME_LEATHERWORKING'] = 'Leatherworking'
-    L['PROFESSION_NAME_TAILORING'] = 'Tailoring'
-    L['PROFESSION_NAME_COOKING'] = 'Cooking'
-    L['PROFESSION_NAME_FIRSTAID'] = 'First Aid'
+    L['LOCALE_PROFESSION_NAME_ALCHEMY'] = 'Alchemy'
+    L['LOCALE_PROFESSION_NAME_BLACKSMITHING'] = 'Blacksmithing'
+    L['LOCALE_PROFESSION_NAME_ENCHANTING'] = 'Enchanting'
+    L['LOCALE_PROFESSION_NAME_ENGINEERING'] = 'Engineering'
+    L['LOCALE_PROFESSION_NAME_LEATHERWORKING'] = 'Leatherworking'
+    L['LOCALE_PROFESSION_NAME_TAILORING'] = 'Tailoring'
+    L['LOCALE_PROFESSION_NAME_COOKING'] = 'Cooking'
+    L['LOCALE_PROFESSION_NAME_FIRSTAID'] = 'First Aid'
+
+    L['LOCALE_TXT_HOURS'] = 'hrs.'
+    L['LOCALE_TXT_MINUTES'] = 'mins.'
+
+    L['MSG_PROFESSION_ADD_POPUP'] = 'Please open the desired Profession window to continue'
+    L['MSG_PROFESSION_ADDED'] = 'Profession {{profession}} added successful'
+    L['MSG_PROFESSION_ADDED_FAIL'] = 'Failed to add Profession'
 
     L['DEFAULT_RESPONSE_HEADER'] = 'Results {{first_index}}-{{last_index}} (of {{num_skills}}) (Page {{page}}/{{num_pages}}) {rt3} = Reagents available'
     L['DEFAULT_RESPONSE_EMPTY'] = 'No results for your request'
@@ -20,10 +27,6 @@ if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as 
     L['DEFAULT_RESPONSE_HINT_PAGING'] = 'Next page: {{query_cmd}} {{next_page}}'
     L['DEFAULT_RESPONSE_SKILL'] = '{{item_link}} ({{reagents}}) {{cd}}'
     L['DEFAULT_RESPONSE_SKILL_CRAFTABLE'] = '{{item_link}} {{num_craftable}}x{rt3} ({{reagents}}) {{cd}}'
-
-    L['MSG_PROFESSION_ADD_POPUP'] = 'Please open the desired Profession window to continue'
-    L['MSG_PROFESSION_ADDED'] = 'Profession {{profession}} added successful'
-    L['MSG_PROFESSION_ADDED_FAIL'] = 'Failed to add Profession'
 
     L['TXT_CONFIG_COMMAND'] = 'Whisper command'
     L['TXT_CONFIG_SPELLFIX'] = 'Misspell fix (pots=pot;flasks=flask;...)'

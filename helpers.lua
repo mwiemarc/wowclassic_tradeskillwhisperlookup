@@ -3,7 +3,7 @@ local TSWL_AddonName, TSWL = ...
 TSWL.helpers = {}
 
 function TSWL.helpers.IsCmdMessage(msg)
-    return string.sub(msg, 1, 1) == '!'
+    return (string.sub(msg, 1, 1) == '!')
 end
 
 function TSWL.helpers.ParseWhisperMessage(msg)
@@ -11,9 +11,10 @@ function TSWL.helpers.ParseWhisperMessage(msg)
     local cmd, query, page = nil, '', 1
 
     if #args == 1 or (#args == 2 and tonumber(args[2]) ~= nil) then
-        cmd = tostring(args[1]):match('^%s*(.-)%s*$')
+        cmd = tostring(string.lower(args[1]))
         page = tonumber(args[2]) ~= nil and tonumber(args[2]) or page
-        return string.lower(cmd), nil, page
+
+        return cmd, nil, page
     end
 
     for i = 1, #args do
@@ -30,12 +31,16 @@ function TSWL.helpers.ParseWhisperMessage(msg)
         end
     end
 
-    return string.lower(cmd:match('^%s*(.-)%s*$')), string.lower(query:match('^%s*(.-)%s*$')), page
+    cmd = string.lower(cmd)
+
+    return cmd, query, page
 end
 
 function TSWL.helpers.GetProfessionNameByCmd(cmd)
+    cmd = string.lower(cmd)
+
     for k, v in pairs(TSWL_Professions) do
-        if v.config.cmd == cmd then
+        if string.lower(v.config.cmd) == cmd then
             return k
         end
     end

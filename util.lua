@@ -33,6 +33,22 @@ function TSWL.util.table_update(t, defaults)
     end
 end
 
+-- trim spaces at start and trail
+function TSWL.util.string_trim(str)
+    return str:match('^%s*(.-)%s*$')
+end
+
+-- do string.match for string array
+function TSWL.util.string_match_array(str, arr)
+    for i, v in ipairs(arr) do
+        if string.match(string.lower(str), string.lower(v)) then
+            return true
+        end
+    end
+
+    return false
+end
+
 -- split string by delimiter char (utf8 safe)
 function TSWL.util.string_split(str, delimiter)
     local substr = {}
@@ -60,6 +76,7 @@ function TSWL.util.string_split(str, delimiter)
     return substr
 end
 
+-- split string by newline (\n)
 function TSWL.util.string_split_newline(str)
     local str_lines = {}
 
@@ -72,18 +89,4 @@ function TSWL.util.string_split_newline(str)
     end
 
     return str_lines
-end
-
-function TSWL.util.string_trim(str)
-    return str:match('^%s*(.-)%s*$')
-end
-
-function TSWL.util.string_match_array(str, arr)
-    for i, v in ipairs(arr) do
-        if string.match(string.lower(str), string.lower(v)) then
-            return true
-        end
-    end
-
-    return false
 end

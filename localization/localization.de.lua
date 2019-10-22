@@ -4,14 +4,21 @@ local LOCALE = GetLocale()
 if LOCALE == 'deDE' then
     local L = {}
 
-    L['PROFESSION_NAME_ALCHEMY'] = 'Alchimie'
-    L['PROFESSION_NAME_BLACKSMITHING'] = 'Schmiedekunst'
-    L['PROFESSION_NAME_ENCHANTING'] = 'Verzauberkunst'
-    L['PROFESSION_NAME_ENGINEERING'] = 'Ingenieurskunst'
-    L['PROFESSION_NAME_LEATHERWORKING'] = 'Lederverarbeitung'
-    L['PROFESSION_NAME_TAILORING'] = 'Schneiderei'
-    L['PROFESSION_NAME_COOKING'] = 'Kochkunst'
-    L['PROFESSION_NAME_FIRSTAID'] = 'Erste Hilfe'
+    L['LOCALE_PROFESSION_NAME_ALCHEMY'] = 'Alchimie'
+    L['LOCALE_PROFESSION_NAME_BLACKSMITHING'] = 'Schmiedekunst'
+    L['LOCALE_PROFESSION_NAME_ENCHANTING'] = 'Verzauberkunst'
+    L['LOCALE_PROFESSION_NAME_ENGINEERING'] = 'Ingenieurskunst'
+    L['LOCALE_PROFESSION_NAME_LEATHERWORKING'] = 'Lederverarbeitung'
+    L['LOCALE_PROFESSION_NAME_TAILORING'] = 'Schneiderei'
+    L['LOCALE_PROFESSION_NAME_COOKING'] = 'Kochkunst'
+    L['LOCALE_PROFESSION_NAME_FIRSTAID'] = 'Erste Hilfe'
+
+    L['LOCALE_TXT_HOURS'] = 'Std.'
+    L['LOCALE_TXT_MINUTES'] = 'Min.'
+
+    L['MSG_PROFESSION_ADD_POPUP'] = 'Bitte öffnen Sie das gewünschte Berufsfenster um fortzufahren'
+    L['MSG_PROFESSION_ADDED'] = 'Beruf {{profession}} erfolgreich hinzugefügt'
+    L['MSG_PROFESSION_ADDED_FAIL'] = 'Beruf konnte nicht hinzugefügt werden'
 
     L['DEFAULT_RESPONSE_HEADER'] = 'Ergebnisse {{first_index}}-{{last_index}} (von {{num_skills}}) (Seite {{page}}/{{num_pages}}) {rt3} = Mats vorhanden'
     L['DEFAULT_RESPONSE_EMPTY'] = 'Ihre Suche lieferte keine Ergebnisse'
@@ -20,10 +27,6 @@ if LOCALE == 'deDE' then
     L['DEFAULT_RESPONSE_HINT_PAGING'] = 'Nächste Seite: {{query_cmd}} {{next_page}}'
     L['DEFAULT_RESPONSE_SKILL'] = '{{item_link}} ({{reagents}}) {{cd}}'
     L['DEFAULT_RESPONSE_SKILL_CRAFTABLE'] = '{{item_link}} {{num_craftable}}x{rt3} ({{reagents}}) {{cd}}'
-
-    L['MSG_PROFESSION_ADD_POPUP'] = 'Bitte öffnen Sie das gewünschte Berufsfenster um fortzufahren'
-    L['MSG_PROFESSION_ADDED'] = 'Beruf {{profession}} erfolgreich hinzugefügt'
-    L['MSG_PROFESSION_ADDED_FAIL'] = 'Beruf konnte nicht hinzugefügt werden'
 
     L['TXT_CONFIG_COMMAND'] = 'Flüster Befehl'
     L['TXT_CONFIG_SPELLFIX'] = 'Schreibfehler korrekturen (tränke=trank;elixiere=elixier;...)'

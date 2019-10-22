@@ -1,12 +1,12 @@
 local TSWL_AddonName, TSWL = ...
 
-TSWL.main = {}
+TSWL.core = {}
 
-TSWL.main.state = {
+TSWL.core.state = {
     add_profession = false
 }
 
-function TSWL.main.AddProfession()
+function TSWL.core.AddProfession()
     local prof_name, skill_cur, skill_max = GetTradeSkillLine()
 
     if
@@ -20,7 +20,7 @@ function TSWL.main.AddProfession()
             TSWL_Professions[prof_name] = TSWL.util.table_deep_copy(TSWL.defaults.Profession)
             TSWL_Professions[prof_name].config.cmd = '!' .. string.lower(prof_name)
 
-            TSWL.main.UpdateProfessionData() -- update data
+            TSWL.core.UpdateProfessionData() -- update data
 
             print('TSWL: ' .. string.gsub(TSWL.L['MSG_PROFESSION_ADDED'], '%{{profession}}', prof_name))
 
@@ -33,7 +33,7 @@ function TSWL.main.AddProfession()
     end
 end
 
-function TSWL.main.UpdateProfessionData()
+function TSWL.core.UpdateProfessionData()
     local prof_name, skill_cur, skill_max = GetTradeSkillLine()
 
     if TSWL_Professions[prof_name] then
@@ -65,8 +65,8 @@ function TSWL.main.UpdateProfessionData()
 
                     -- save reagent
                     if reagent_name then
-                        if #ignore_reagents > 0 then
-                            if not TSWL.util.string_match_array(reagent_name, ignore_reagents) then -- check for ignore reagent
+                        if #ignore_reagents > 0 then -- check for ignore reagent
+                            if not TSWL.util.string_match_array(reagent_name, ignore_reagents) then
                                 table.insert(skill.reagents, reagent)
                             end
                         else
@@ -79,7 +79,7 @@ function TSWL.main.UpdateProfessionData()
                 local link = GetTradeSkillItemLink(i)
 
                 if not link then
-                    link = skill.name
+                    link = skill.name -- save name overwise
                 end
 
                 skill.link = link
@@ -89,27 +89,27 @@ function TSWL.main.UpdateProfessionData()
     end
 end
 
-function TSWL.main.GetTradeSkills(prof_name, query)
+function TSWL.core.GetTradeSkills(prof_name, query)
     -- select all
     if not query then
         return TSWL_Professions[prof_name].data.tradeskills
     end
 
-    local skills = {}
+    query = string.lower(query)
 
-    -- fix misspells
-    local spellfix = TSWL.util.string_split(TSWL_Professions[prof_name].config.txt_spellfix, ';')
+    local skills = {}
+    local spellfix = TSWL.util.string_split(TSWL_Professions[prof_name].config.txt_spellfix, ';') -- fix misspells
 
     for i, v in ipairs(spellfix) do
         local sf_split = TSWL.util.string_split(v, '=')
 
-        if string.match(string.lower(sf_split[1]), string.lower(query)) then
+        if string.match(string.lower(sf_split[1]), query) then
             query = string.lower(sf_split[2])
         end
     end
 
     for i, s in ipairs(TSWL_Professions[prof_name].data.tradeskills) do
-        if string.match(string.lower(s.name), string.lower(query)) then
+        if string.match(string.lower(s.name), query) then
             table.insert(skills, s)
         end
     end
@@ -117,12 +117,12 @@ function TSWL.main.GetTradeSkills(prof_name, query)
     return skills
 end
 
-function TSWL.main.BuildWhisperResponse(prof_name, skills, page, query_cmd)
+function TSWL.core.BuildWhisperResponse(prof_name, skills, page, query_cmd)
     local res_lines = {}
 
     if #skills > 0 then
         -- paging
-        page = page - 1
+        page = page - 1 -- for calculations
 
         local per_page = 15
         local num_pages = math.ceil(#skills / per_page)
@@ -180,9 +180,9 @@ function TSWL.main.BuildWhisperResponse(prof_name, skills, page, query_cmd)
                     if cd_mins > 60 then
                         local cd_hrs = floor((cd_mins / 60) + 0.5)
 
-                        line = string.gsub(line, '%{{cd}}', '(CD: ' .. cd_hrs .. ' hrs.)')
+                        line = string.gsub(line, '%{{cd}}', '(CD: ' .. cd_hrs .. ' ' .. TSWL.L['LOCALE_TXT_HOURS'] .. '.)')
                     else
-                        line = string.gsub(line, '%{{cd}}', '(CD: ' .. cd_mins .. ' mins.)')
+                        line = string.gsub(line, '%{{cd}}', '(CD: ' .. cd_mins .. ' ' .. TSWL.L['LOCALE_TXT_MINUTES'] .. '.)')
                     end
                 else
                     line = string.gsub(line, '%{{cd}}', '')
@@ -215,79 +215,84 @@ function TSWL.main.BuildWhisperResponse(prof_name, skills, page, query_cmd)
     return res_lines
 end
 
-function TSWL.main.SendWhisperResponse(player, lines)
+function TSWL.core.SendWhisperResponse(player, lines)
     for i, l in ipairs(lines) do
         ChatThrottleLib:SendChatMessage('NORMAL', 'TRADESKILL_WHISPER_LOOKUP_RESPONSE', l, 'WHISPER', 'Common', player)
     end
 end
 
-function TSWL.main.ProcessWhisperMessage(player, msg)
+function TSWL.core.ProcessWhisperMessage(player, msg)
     if TSWL.helpers.IsCmdMessage(msg) then
         local cmd, query, page = TSWL.helpers.ParseWhisperMessage(msg)
         local prof_name = TSWL.helpers.GetProfessionNameByCmd(cmd)
 
         if TSWL_Professions[prof_name] then
-            local skills = TSWL.main.GetTradeSkills(prof_name, query)
-            local res_lines = TSWL.main.BuildWhisperResponse(prof_name, skills, page, (query and cmd .. ' ' .. query or cmd))
+            local skills = TSWL.core.GetTradeSkills(prof_name, query)
+            local res_lines = TSWL.core.BuildWhisperResponse(prof_name, skills, page, (query and cmd .. ' ' .. query or cmd))
 
-            TSWL.main.SendWhisperResponse(player, res_lines)
+            TSWL.core.SendWhisperResponse(player, res_lines)
         end
     end
 end
 
-function TSWL.main.Init(name)
-    if name == TSWL_AddonName then
-        TSWL_Professions = TSWL_Professions or {}
+function TSWL.core.Init()
+    TSWL_Professions = TSWL_Professions or {}
 
-        for k, v in pairs(TSWL_Professions) do
-            -- update config
-            TSWL.util.table_update(TSWL_Professions[k], TSWL.defaults.Profession)
+    -- update config
+    for k, v in pairs(TSWL_Professions) do
+        TSWL.util.table_update(TSWL_Professions[k], TSWL.defaults.Profession)
 
-            for i = 1, #TSWL_Professions[k].data.tradeskills do
-                TSWL_Professions[k].data.tradeskills[i] = TSWL_Professions[k].data.tradeskills[i] or {}
-                TSWL.util.table_update(TSWL_Professions[k].data.tradeskills[i], TSWL.defaults.ProfessionTradeSkill)
+        for i = 1, #TSWL_Professions[k].data.tradeskills do
+            TSWL_Professions[k].data.tradeskills[i] = TSWL_Professions[k].data.tradeskills[i] or {}
+            TSWL.util.table_update(TSWL_Professions[k].data.tradeskills[i], TSWL.defaults.ProfessionTradeSkill)
 
-                for j = 1, #TSWL_Professions[k].data.tradeskills[i].reagents do
-                    TSWL_Professions[k].data.tradeskills[i].reagents[j] = TSWL_Professions[k].data.tradeskills[i].reagents[j] or {}
-                    TSWL.util.table_update(TSWL_Professions[k].data.tradeskills[i].reagents[j], TSWL.defaults.ProfessionTradeSkillReagent)
-                end
+            for j = 1, #TSWL_Professions[k].data.tradeskills[i].reagents do
+                TSWL_Professions[k].data.tradeskills[i].reagents[j] = TSWL_Professions[k].data.tradeskills[i].reagents[j] or {}
+                TSWL.util.table_update(TSWL_Professions[k].data.tradeskills[i].reagents[j], TSWL.defaults.ProfessionTradeSkillReagent)
             end
         end
-
-        TSWL.options.SetupPanel()
     end
+
+    TSWL.options.SetupPanel()
 end
 
--- main event handler
-function TSWL.main.EventHandler(self, event, ...)
+-- core event handler
+function TSWL.core.EventHandler(self, event, ...)
     if event == 'ADDON_LOADED' then
         local name = ...
 
-        TSWL.main.Init(name)
+        if name == TSWL_AddonName then
+            TSWL.core.Init(name)
+        end
     elseif event == 'TRADE_SKILL_UPDATE' then
-        if TSWL.main.state.add_profession then
-            TSWL.main.AddProfession()
+        if TSWL.core.state.add_profession then
+            TSWL.core.AddProfession()
         else
-            TSWL.main.UpdateProfessionData()
+            TSWL.core.UpdateProfessionData()
         end
     elseif event == 'CHAT_MSG_WHISPER' then
-        local wsp_msg, wsp_name = ...
+        local msg, name = ...
 
-        TSWL.main.ProcessWhisperMessage(wsp_name, wsp_msg)
-    end
+        TSWL.core.ProcessWhisperMessage(name, msg)
     --[[elseif event == 'PLAYER_LOGIN' then
-        for k, v in pairs(TSWL_Professions) do
-            print('TSWL loaded: ' .. k .. ' (' .. v.config.cmd .. ', ' .. #v.data.tradeskills .. ' tradeskills)')
-    end]]
+        C_TIMER.After(
+            10,
+            function()
+                for k, v in pairs(TSWL_Professions) do
+                    print('TSWL loaded: ' .. k .. ' (' .. v.config.cmd .. ', ' .. #v.data.tradeskills .. ' tradeskills)')
+                end
+            end
+        )]]
+    end
 end
 
--- create mainframe and register events
-TSWL.main.frame = CreateFrame('Frame')
-TSWL.main.frame:RegisterEvent('TRADE_SKILL_UPDATE')
-TSWL.main.frame:RegisterEvent('CHAT_MSG_WHISPER')
-TSWL.main.frame:RegisterEvent('PLAYER_ENTERING_WORLD')
-TSWL.main.frame:RegisterEvent('ADDON_LOADED')
-TSWL.main.frame:SetScript('OnEvent', TSWL.main.EventHandler)
+-- create coreframe and register events
+TSWL.core.frame = CreateFrame('Frame')
+TSWL.core.frame:RegisterEvent('TRADE_SKILL_UPDATE')
+TSWL.core.frame:RegisterEvent('CHAT_MSG_WHISPER')
+TSWL.core.frame:RegisterEvent('PLAYER_ENTERING_WORLD')
+TSWL.core.frame:RegisterEvent('ADDON_LOADED')
+TSWL.core.frame:SetScript('OnEvent', TSWL.core.EventHandler)
 
 -- register slashcommand
 SLASH_TSWL_SLASHCOMMAND1 = '/tswl'
@@ -296,19 +301,17 @@ function SlashCmdList.TSWL_SLASHCOMMAND(msg, editBox)
         -- Workaround: this function has to be called twice
         InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
         InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
-    else
+    else -- for testing
         if TSWL.helpers.IsCmdMessage(msg) then
             local cmd, query, page = TSWL.helpers.ParseWhisperMessage(msg)
             local prof_name = TSWL.helpers.GetProfessionNameByCmd(cmd)
 
-            print(cmd, query, page)
-
             if TSWL_Professions[prof_name] then
-                local skills = TSWL.main.GetTradeSkills(prof_name, query)
-                local res_lines = TSWL.main.BuildWhisperResponse(prof_name, skills, page, (query and cmd .. ' ' .. query or cmd))
+                local skills = TSWL.core.GetTradeSkills(prof_name, query)
+                local res_lines = TSWL.core.BuildWhisperResponse(prof_name, skills, page, (query and cmd .. ' ' .. query or cmd))
 
                 for i, l in ipairs(res_lines) do
-                    DEFAULT_CHAT_FRAME:AddMessage(l)
+                    print(l)
                 end
             end
         end
