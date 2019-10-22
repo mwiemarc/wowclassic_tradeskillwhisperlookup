@@ -13,7 +13,8 @@
 - !smith boot 2 - get items with "boot" in name (page 2)
 - !smith Dark Iron Plate - get specific item
 
-
+bottom line
+------
 * All crafting professions should be supported.
 * Currently translations for english and german are included but the addon should work for every locale.
 (this is my first addon so far, hope you like it and i would appreciate feedback)
@@ -25,4 +26,4 @@
   
 ## screenshots
 ![Examples](https://i.imgur.com/clyrzmQ.jpg "Examples")
-[Config]https://i.imgur.com/tw5Db4J.jpg
+![Config](https://i.imgur.com/tw5Db4J.jpg "Config")
