@@ -4,15 +4,6 @@ local LOCALE = GetLocale()
 if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as fallback language
     local L = {}
 
-    L['LOCALE_PROFESSION_NAME_ALCHEMY'] = 'Alchemy'
-    L['LOCALE_PROFESSION_NAME_BLACKSMITHING'] = 'Blacksmithing'
-    L['LOCALE_PROFESSION_NAME_ENCHANTING'] = 'Enchanting'
-    L['LOCALE_PROFESSION_NAME_ENGINEERING'] = 'Engineering'
-    L['LOCALE_PROFESSION_NAME_LEATHERWORKING'] = 'Leatherworking'
-    L['LOCALE_PROFESSION_NAME_TAILORING'] = 'Tailoring'
-    L['LOCALE_PROFESSION_NAME_COOKING'] = 'Cooking'
-    L['LOCALE_PROFESSION_NAME_FIRSTAID'] = 'First Aid'
-
     L['LOCALE_TXT_HOURS'] = 'hrs.'
     L['LOCALE_TXT_MINUTES'] = 'mins.'
 

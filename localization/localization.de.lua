@@ -4,15 +4,6 @@ local LOCALE = GetLocale()
 if LOCALE == 'deDE' then
     local L = {}
 
-    L['LOCALE_PROFESSION_NAME_ALCHEMY'] = 'Alchimie'
-    L['LOCALE_PROFESSION_NAME_BLACKSMITHING'] = 'Schmiedekunst'
-    L['LOCALE_PROFESSION_NAME_ENCHANTING'] = 'Verzauberkunst'
-    L['LOCALE_PROFESSION_NAME_ENGINEERING'] = 'Ingenieurskunst'
-    L['LOCALE_PROFESSION_NAME_LEATHERWORKING'] = 'Lederverarbeitung'
-    L['LOCALE_PROFESSION_NAME_TAILORING'] = 'Schneiderei'
-    L['LOCALE_PROFESSION_NAME_COOKING'] = 'Kochkunst'
-    L['LOCALE_PROFESSION_NAME_FIRSTAID'] = 'Erste Hilfe'
-
     L['LOCALE_TXT_HOURS'] = 'Std.'
     L['LOCALE_TXT_MINUTES'] = 'Min.'
 

@@ -73,7 +73,7 @@ end
 function TSWLOptionsPanel_ClickAddProfession()
     PlaySound(624) -- GAMEGENERICBUTTONPRESS
 
-    TSWL.main.state.add_profession = true
+    TSWL.core.state.add_profession = true
 
     -- show popup, hide menu
     StaticPopup_Show('TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP')
@@ -92,7 +92,7 @@ function TSWL.options.AddProfessionCallback(prof_name)
 
     CloseTradeSkill() -- close tradeskill window
 
-    TSWL.main.state.add_profession = false
+    TSWL.core.state.add_profession = false
 
     -- hide popup, show menu
     StaticPopup_Hide('TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP')

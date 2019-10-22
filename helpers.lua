@@ -2,6 +2,18 @@ local TSWL_AddonName, TSWL = ...
 
 TSWL.helpers = {}
 
+function TSWL.helpers.IsCraftingProfession(spellid)
+    local ids = {2259, 3101, 3464, 11611, 7411, 7412, 7413, 13920, 2018, 3100, 3538, 9785, 3908, 3909, 3910, 12180, 2108, 3104, 3811, 10662, 4036, 4037, 4038, 12656, 3273, 3274, 7924, 10846, 2550, 3102, 3413, 18260}
+
+    for i, v in ipairs(ids) do
+        if v == spellid then
+            return true
+        end
+    end
+
+    return false
+end
+
 function TSWL.helpers.IsCmdMessage(msg)
     return (string.sub(msg, 1, 1) == '!')
 end

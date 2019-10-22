@@ -8,14 +8,9 @@ TSWL.core.state = {
 
 function TSWL.core.AddProfession()
     local prof_name, skill_cur, skill_max = GetTradeSkillLine()
+    local spellid = select(7, GetSpellInfo(prof_name))
 
-    if
-        prof_name == TSWL.L['PROFESSION_NAME_ALCHEMY'] or prof_name == TSWL.L['PROFESSION_NAME_BLACKSMITHING'] or prof_name == TSWL.L['PROFESSION_NAME_ENCHANTING'] or prof_name == TSWL.L['PROFESSION_NAME_ENGINEERING'] or
-            prof_name == TSWL.L['PROFESSION_NAME_LEATHERWORKING'] or
-            prof_name == TSWL.L['PROFESSION_NAME_TAILORING'] or
-            prof_name == TSWL.L['PROFESSION_NAME_COOKING'] or
-            prof_name == TSWL.L['PROFESSION_NAME_FIRSTAID']
-     then
+    if TSWL.helpers.IsCraftingProfession(spellid) then
         if not TSWL_Professions[prof_name] then
             TSWL_Professions[prof_name] = TSWL.util.table_deep_copy(TSWL.defaults.Profession)
             TSWL_Professions[prof_name].config.cmd = '!' .. string.lower(prof_name)
