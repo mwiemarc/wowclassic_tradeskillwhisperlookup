@@ -25,6 +25,5 @@ Currently translations for english and german are included but the addon should 
   
   
 ## screenshots
-[Imgur](https://i.imgur.com/tw5Db4J.jpg)
-[Imgur](https://i.imgur.com/clyrzmQ.jpg)
-[Imgur](https://i.imgur.com/JfKnkQl.jpg)
+[Examples](https://i.imgur.com/clyrzmQ.jpg)
+[Config](https://i.imgur.com/tw5Db4J.jpg)
