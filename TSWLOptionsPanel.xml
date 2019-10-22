@@ -12,7 +12,7 @@
                         </Anchor>
                     </Anchors>
                 </FontString>
-                <FontString name="$parentSubText" text="Author: mwiemarc aka Maxhealth-Venoxis" inherits="GameFontHighlightSmall" nonspacewrap="true" justifyH="LEFT" justifyV="TOP">
+                <FontString name="$parentSubText" text="by mwiemarc aka Maxhealth-Venoxis" inherits="GameFontHighlightSmall" nonspacewrap="true" justifyH="LEFT" justifyV="TOP">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativeTo="$parentTitle" relativePoint="BOTTOMLEFT">
                             <Offset>
