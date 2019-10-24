@@ -24,7 +24,7 @@ function TSWL.helpers.ParseWhisperMessage(msg)
 
     if #args == 1 or (#args == 2 and tonumber(args[2]) ~= nil) then
         cmd = tostring(string.lower(args[1]))
-        page = tonumber(args[2]) ~= nil and tonumber(args[2]) or page
+        page = tonumber(args[2]) ~= nil and tonumber(args[2]) or 0
 
         return cmd, nil, page
     end
@@ -43,7 +43,8 @@ function TSWL.helpers.ParseWhisperMessage(msg)
         end
     end
 
-    cmd = string.lower(cmd)
+    cmd = TSWL.util.string_trim(string.lower(cmd))
+    query = TSWL.util.string_trim(query)
 
     return cmd, query, page
 end

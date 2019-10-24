@@ -212,7 +212,7 @@ end
 
 function TSWL.core.SendWhisperResponse(player, lines)
     for i, l in ipairs(lines) do
-        ChatThrottleLib:SendChatMessage('NORMAL', 'TRADESKILL_WHISPER_LOOKUP_RESPONSE', l, 'WHISPER', 'Common', player)
+        ChatThrottleLib:SendChatMessage('BULK', 'TRADESKILL_WHISPER_LOOKUP_RESPONSE', l, 'WHISPER', 'Common', player)
     end
 end
 
@@ -222,7 +222,7 @@ function TSWL.core.ProcessWhisperMessage(player, msg)
         local prof_name = TSWL.helpers.GetProfessionNameByCmd(cmd)
 
         if TSWL_Professions[prof_name] then
-            local skills = TSWL.core.GetTradeSkills(prof_name, query)
+            local skills = TSWL.core.GetTradeSkills(prof_name, query, page)
             local res_lines = TSWL.core.BuildWhisperResponse(prof_name, skills, page, (query and cmd .. ' ' .. query or cmd))
 
             TSWL.core.SendWhisperResponse(player, res_lines)
