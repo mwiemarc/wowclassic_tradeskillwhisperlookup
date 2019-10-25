@@ -10,21 +10,19 @@ function TSWL.core.AddProfession()
     local prof_name, skill_cur, skill_max = GetTradeSkillLine()
     local spellid = select(7, GetSpellInfo(prof_name))
 
-    if TSWL.helpers.IsCraftingProfession(spellid) then
-        if not TSWL_Professions[prof_name] then
-            TSWL_Professions[prof_name] = TSWL.util.table_deep_copy(TSWL.defaults.Profession)
-            TSWL_Professions[prof_name].config.cmd = '!' .. string.lower(prof_name)
+    if not TSWL_Professions[prof_name] then
+        TSWL_Professions[prof_name] = TSWL.util.table_deep_copy(TSWL.defaults.Profession)
+        TSWL_Professions[prof_name].config.cmd = '!' .. string.lower(prof_name)
 
-            TSWL.core.UpdateProfessionData() -- update data
+        TSWL.core.UpdateProfessionData() -- update data
 
-            print('TSWL: ' .. string.gsub(TSWL.L['MSG_PROFESSION_ADDED'], '%{{profession}}', prof_name))
+        CloseTradeSkill() -- close tradeskill window
 
-            TSWL.options.AddProfessionCallback(prof_name)
-        else
-            TSWL.options.AddProfessionCallback(nil)
-        end
+        TSWL.core.state.add_profession = false
+
+        TSWL.options.AddProfessionCallback(prof_name)
     else
-        TSWL.options.AddProfessionCallback(nil)
+        TSWL.options.AddProfessionCallback(nil, 'Already added')
     end
 end
 

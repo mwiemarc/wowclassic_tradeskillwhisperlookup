@@ -80,19 +80,17 @@ function TSWLOptionsPanel_ClickAddProfession()
     InterfaceOptionsFrame_Show()
 end
 
-function TSWL.options.AddProfessionCallback(prof_name)
+function TSWL.options.AddProfessionCallback(prof_name, err)
     if prof_name then
         -- select new profession
         local professionPanel = _G['TSWLOptionsPanelProfessionConfig']
         TSWLOptionsPanel.selected_profession = prof_name
         professionPanel.refresh()
+
+        print('TSWL: ' .. string.gsub(TSWL.L['MSG_PROFESSION_ADDED'], '%{{profession}}', prof_name))
     else
-        print('TSWL: ' .. TSWL.L['MSG_PROFESSION_ADDED_FAIL'])
+        print('TSWL: ' .. TSWL.L['MSG_PROFESSION_ADDED_FAIL'] .. ': ' .. err)
     end
-
-    CloseTradeSkill() -- close tradeskill window
-
-    TSWL.core.state.add_profession = false
 
     -- hide popup, show menu
     StaticPopup_Hide('TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP')
