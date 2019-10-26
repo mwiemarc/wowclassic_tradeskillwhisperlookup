@@ -109,7 +109,7 @@ function TSWLOptionsPanel_ClickRemoveProfession()
     PlaySound(624) -- GAMEGENERICBUTTONPRESS
 
     local panel = _G['TSWLOptionsPanel']
-    local professionPanel = _G['TSWLOptionsPanelProfessionConfig']
+    local professionPanel = _G['TSWLOptionsPanelProfessionConfigScrollFrameProfessionConfig']
 
     local newProfessions = {}
 
@@ -135,20 +135,24 @@ function TSWLOptionsPanel_ClickAddProfession()
     InterfaceOptionsFrame_Show()
 end
 
+function TSWLOptionsPanel_ToggleAutocomplete(self)
+    TSWL_CharacterConfig.enableAutocomplete = _G['TSWLOptionsPanelCheckAutocomplete']:GetChecked()
+end
+
 function TSWL.options.AddProfessionCallback(profName, err)
     if profName then
         PlaySound(624) -- GAMEGENERICBUTTONPRESS
 
         -- select new profession
-        local professionPanel = _G['TSWLOptionsPanelProfessionConfig']
+        local professionPanel = _G['TSWLOptionsPanelScrollFrameProfessionConfig']
         TSWLOptionsPanel.selectedProfession = profName
         professionPanel.refresh()
 
-        print('|cffffff00TS|cffff7effW|r|cffffff00L:|r |cff00ff00' .. string.gsub(TSWL.L['MSG_ADD_PROFESSION_SUCCESS'], '%{{profession}}', profName) .. '|r')
+        print('|cffffff00TS|r|cffff7effW|r|cffffff00L:|r |cff00ff00' .. string.gsub(TSWL.L['MSG_ADD_PROFESSION_SUCCESS'], '%{{profession}}', profName) .. '|r')
     else
         PlaySound(847) -- igQuestFailed
 
-        print('|cffffff00TS|cffff7effW|r|cffffff00L:|r |cffff0000' .. TSWL.L['MSG_ADD_PROFESSION_ERR_EXISTS'] .. '|r')
+        print('|cffffff00TS|r|cffff7effW|r|cffffff00L:|r |cffff0000' .. TSWL.L['MSG_ADD_PROFESSION_ERR_EXISTS'] .. '|r')
     end
 
     -- hide popup, show menu
@@ -160,7 +164,7 @@ end
 
 function TSWL.options.SetupPanel()
     local panel = _G['TSWLOptionsPanel']
-    local professionPanel = _G['TSWLOptionsPanelProfessionConfig']
+    local professionPanel = _G['TSWLOptionsPanelScrollFrameProfessionConfig']
     local professionDropdown = _G['TSWLOptionsPanelProfessionDropDown']
 
     panel.selectedProfession = nil
@@ -249,7 +253,7 @@ function TSWL.options.SetupPanel()
         local widget = self.widget
         local value = self:GetText()
 
-        if widget.autocomplete and TSWL.options.autocompleteData[widget.autocomplete.dataKey] then -- accept suggensting
+        if TSWL_CharacterConfig.enableAutocomplete and widget.autocomplete and TSWL.options.autocompleteData[widget.autocomplete.dataKey] then -- accept suggensting
             if key == 'TAB' then
                 self:SetCursorPosition(string.len(value) + 1)
                 self:HighlightText(0, 0)
@@ -352,8 +356,10 @@ function TSWL.options.SetupPanel()
         end
     end
 
+    _G['TSWLOptionsPanelCheckAutocomplete']:SetChecked(TSWL_CharacterConfig.enableAutocomplete) -- set autocomplete
+
     -- Display the current version in the title
-    _G['TSWLOptionsPanelTitle']:SetText('TradeSkill|cffff7effWhisper|rLookup |cFF888888v' .. GetAddOnMetadata('TradeSkillWhisperLookup', 'Version'))
+    _G['TSWLOptionsPanelTitle']:SetText('TradeSkill|cffff7effWhisper|rLookup |cff888888v' .. GetAddOnMetadata('TradeSkillWhisperLookup', 'Version'))
 
     panel.name = 'TradeSkillWhisperLookup'
     panel.refresh = function(self)
@@ -364,7 +370,7 @@ function TSWL.options.SetupPanel()
 end
 
 StaticPopupDialogs['TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP'] = {
-    text = '<TSWL>\n\n' .. TSWL.L['POPUP_MSG_ADD_PROFESSION'] .. '\n',
+    text = '<TS|cffff7effW|rL>\n\n' .. TSWL.L['POPUP_MSG_ADD_PROFESSION'] .. '\n',
     button1 = 'OK',
     OnAccept = function()
         StaticPopup_Hide('TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP')

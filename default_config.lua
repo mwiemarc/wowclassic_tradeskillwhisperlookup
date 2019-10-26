@@ -4,6 +4,7 @@ TSWL.defaultConfig = {}
 
 TSWL.defaultConfig.CharacterConfig = {
     configVersion = 1,
+    enableAutocomplete = false,
     professions = {}
 }
 

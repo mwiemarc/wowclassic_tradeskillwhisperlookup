@@ -262,7 +262,7 @@ local function MainEventHandler(frame, event, ...)
         ProcessWhisperMessage(name, msg)
     elseif event == 'PLAYER_LOGIN' then
         for k, v in pairs(TSWL_CharacterConfig.professions) do
-            print('|cffffff00TS|cffff7effW|r|cffffff00L: ' .. k .. ' (|r|cffff7eff' .. v.config.cmd .. '|r|cffffff00)|r')
+            print('|cffffff00TS|r|cffff7effW|r|cffffff00L: ' .. k .. ' (|r|cffff7eff' .. v.config.cmd .. '|r|cffffff00)|r')
         end
     elseif event == 'ADDON_LOADED' then
         local name = ...

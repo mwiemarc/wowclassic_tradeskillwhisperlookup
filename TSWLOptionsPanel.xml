@@ -82,7 +82,7 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Frame name="$parentProfessionConfig">
+            <ScrollFrame name="$parentScrollFrame" inherits="UIPanelScrollFrameTemplate">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentProfessionDropDown" relativePoint="BOTTOMLEFT">
                         <Offset>
@@ -91,20 +91,55 @@
                     </Anchor>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
                         <Offset>
-                            <AbsDimension x="-15" y="15"/>
+                            <AbsDimension x="-30" y="15"/>
                         </Offset>
                     </Anchor>
-                </Anchors>
+                </Anchors>                
                 <Backdrop bgFile="Interface\Tooltips\UI-Tooltip-Background" edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
                     <EdgeSize val="16"/>
                     <TileSize val="16"/>
                     <Color r="0.0" g="0.0" b="0.0" a="0.5" />
                     <BackgroundInsets left="3" right="3" top="3" bottom="3"/>
                 </Backdrop>
-                <Frames>
-                    <!-- These widgets will be generated automatically on the LUA side. -->
-                </Frames>
-	        </Frame>
+                <ScrollChild>              
+                    <Frame name="$parentProfessionConfig">
+                        <Size x="200" y="800"/>
+                        <Anchors>
+                            <Anchor point="TOPLEFT"/>
+                        </Anchors>
+                        <Frames>
+                            <!-- These widgets will be generated automatically on the LUA side. -->
+                        </Frames>
+                    </Frame>
+                </ScrollChild>
+            </ScrollFrame>            
+            <CheckButton name="$parentCheckAutocomplete" inherits="InterfaceOptionsBaseCheckButtonTemplate">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" relativeTo="$parentScrollFrame">
+                        <Offset>
+                            <AbsDimension x="-132" y="32"/>
+                        </Offset>
+                    </Anchor>
+                </Anchors>
+                <Layers>
+                    <Layer level="ARTWORK">
+                        <FontString name="$parentCheckAutocompleteLabel" inherits="GameFontNormal" text="Autocomplete (alpha)">
+                            <Anchors>
+                                <Anchor point="LEFT" relativePoint="RIGHT">
+                                    <Offset>
+                                        <AbsDimension x="2" y="1"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                    <OnClick>
+                        TSWLOptionsPanel_ToggleAutocomplete()
+                    </OnClick>
+                </Scripts>
+            </CheckButton> 
         </Frames>
 	</Frame>
 </Ui>
