@@ -266,12 +266,10 @@ function TSWL.options.SetupPanel()
         local value = self:GetText()
 
         if TSWL_CharacterConfig.enableAutocomplete and widget.autocomplete and TSWL.options.autocompleteData[widget.autocomplete.dataKey] then -- accept suggensting
-            if key == 'TAB' or key == 'ENTER' or key == 'RETURN' then
+            if key == 'TAB' or key == 'ENTER' or key == 'RETURN' then -- complete suggestion
                 self:SetCursorPosition(string.len(value) + 1)
                 self:HighlightText(0, 0)
-
-                widgetValueChanged(widget, value) -- save to config table
-            elseif key ~= 'BACKSPACE' and key ~= 'DELETE' then
+            elseif not IsControlKeyDown() and key ~= 'BACKSPACE' and key ~= 'DELETE' and key ~= 'LCTRL' and key ~= 'LSHIFT' then -- do autocomplete
                 local ci = self:GetCursorPosition() -- save cursor pos
                 local inputStr = string.sub(value, 1, ci) -- remove selection from query
 

@@ -46,7 +46,7 @@ if LOCALE == 'deDE' then
         [[{{first_index}} = Index des ersten Ergebnisses auf der Seite
 {{last_index}} = Index des letzten Ergebnisses auf der Seite
 {{num_results}} = Anzahl der Ergebnisse
-{{num_skills}} = Anzahl der Fertigkeiten für den Beruf
+{{num_tradeskills}} = Anzahl der Fertigkeiten für den Beruf
 {{page}} = Aktuelle Seite
 {{num_pages}} = Anzahl der Seiten
 {{request_cmd}} = Erhaltener Befehl
@@ -66,7 +66,7 @@ if LOCALE == 'deDE' then
 {{item_link}} = Item link
 {{reagents}} = Benötigtes Material
 {{num_craftable}} = Herstellbar mit Material im Inv.
-{{cd_timeleft}} = Verbl. Abklingzeit (nur angezeigt wenn verbleibende Zeit)]]
+{{cd}} = Verbl. Abklingzeit (nur angezeigt wenn verbleibende Zeit)]]
 
     TSWL.L = L
 end

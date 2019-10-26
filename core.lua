@@ -33,7 +33,7 @@ local function BuildWhisperResponse(prof, query, page, skills)
         headerStr = string.gsub(headerStr, '%{{page}}', tostring(page))
         headerStr = string.gsub(headerStr, '%{{num_pages}}', tostring(numPages))
         headerStr = string.gsub(headerStr, '%{{num_results}}', tostring(#skills))
-        headerStr = string.gsub(headerStr, '%{{num_skills}}', tostring(#prof.data.tradeskills))
+        headerStr = string.gsub(headerStr, '%{{num_tradeskills}}', tostring(#prof.data.tradeskills))
         headerStr = string.gsub(headerStr, '%{{cmd}}', prof.config.cmd)
         headerStr = string.gsub(headerStr, '%{{request_cmd}}', tostring(query and prof.config.cmd .. ' ' .. query or prof.config.cmd))
         headerStr = string.gsub(headerStr, '%{{skill_cur}}', tostring(prof.data.skillCur))
@@ -76,14 +76,13 @@ local function BuildWhisperResponse(prof, query, page, skills)
                 skillStr = string.gsub(skillStr, '%{{reagents}}', reagentsStr) -- add reagents
 
                 local cdStr = ''
+                local cdMins = floor((s.cd / 60) + 0.5)
 
-                if s.cd then -- has cooldown
-                    local mins = floor((s.cd / 60) + 0.5)
-
-                    cdStr = string.format('(%s %s)', TSWL.L['LOCALE_COOLDOWN_TIMELEFT_TXT'], (mins > 60) and (floor((mins / 60) + 0.5) .. ' ' .. TSWL.L['LOCALE_SHORT_HOURS']) or (mins .. ' ' .. TSWL.L['LOCALE_SHORT_MINUTES']))
+                if s.cd and cdMins > 0 then -- has cooldown
+                    cdStr = string.format('(%s %s)', TSWL.L['LOCALE_COOLDOWN_TIMELEFT_TXT'], (cdMins > 60) and (floor((cdMins / 60) + 0.5) .. ' ' .. TSWL.L['LOCALE_SHORT_HOURS']) or (cdMins .. ' ' .. TSWL.L['LOCALE_SHORT_MINUTES']))
                 end
 
-                skillStr = string.gsub(skillStr, '%{{cd_timeleft}}', cdStr) -- replace cd timeleft with value or empty str
+                skillStr = string.gsub(skillStr, '%{{cd}}', cdStr) -- replace cd timeleft with value or empty str
 
                 -- split overlength strings to prevent dcs
                 if string.len(skillStr) >= 254 then
@@ -119,7 +118,7 @@ local function BuildWhisperResponse(prof, query, page, skills)
             footerStr = string.gsub(footerStr, '%{{page}}', tostring(page))
             footerStr = string.gsub(footerStr, '%{{num_pages}}', tostring(numPages))
             footerStr = string.gsub(footerStr, '%{{num_results}}', tostring(#skills))
-            footerStr = string.gsub(footerStr, '%{{num_skills}}', tostring(#prof.data.tradeskills))
+            footerStr = string.gsub(footerStr, '%{{num_tradeskills}}', tostring(#prof.data.tradeskills))
             footerStr = string.gsub(footerStr, '%{{cmd}}', prof.config.cmd)
             footerStr = string.gsub(footerStr, '%{{request_cmd}}', (query and prof.config.cmd .. ' ' .. query or prof.config.cmd))
             footerStr = string.gsub(footerStr, '%{{skill_cur}}', tostring(prof.data.skillCur))
@@ -205,8 +204,8 @@ local function MigrateOldConfig()
             TSWL_CharacterConfig.professions[k].config.responseNoResults = v.config.txt_res_empty or TSWL_CharacterConfig.professions[k].config.responseNoResults
             TSWL_CharacterConfig.professions[k].config.responseHintDelayed = v.config.txt_res_hint_large or TSWL_CharacterConfig.professions[k].config.responseHintDelayed
             TSWL_CharacterConfig.professions[k].config.responseHintPaging = string.gsub(v.config.txt_res_hint_paging, '%{{query_cmd}}', '{{request_cmd}}') or TSWL_CharacterConfig.professions[k].config.responseHintPaging
-            TSWL_CharacterConfig.professions[k].config.responseSkill = string.gsub(v.config.txt_res_skill, '%{{cd}}', '{{cd_timeleft}}') or TSWL_CharacterConfig.professions[k].config.responseSkill
-            TSWL_CharacterConfig.professions[k].config.responseSkillCraftable = string.gsub(v.config.txt_res_skill_craftable, '%{{cd}}', '{{cd_timeleft}}') or TSWL_CharacterConfig.professions[k].config.responseSkillCraftable
+            TSWL_CharacterConfig.professions[k].config.responseSkill = v.config.txt_res_skill or TSWL_CharacterConfig.professions[k].config.responseSkill
+            TSWL_CharacterConfig.professions[k].config.responseSkillCraftable = v.config.txt_res_skill_craftable or TSWL_CharacterConfig.professions[k].config.responseSkillCraftable
 
             TSWL_CharacterConfig.professions[k].data.name = k or TSWL_CharacterConfig.professions[k].data.name
             TSWL_CharacterConfig.professions[k].data.skillCur = v.data.skill_cur or TSWL_CharacterConfig.professions[k].data.skillCur
