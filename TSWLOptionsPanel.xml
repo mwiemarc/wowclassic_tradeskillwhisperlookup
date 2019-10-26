@@ -28,8 +28,8 @@
                 </FontString>
             </Layer>
         </Layers>
-		<Frames>
-            <!-- This would be the place for global settings widgets that apply to all rings. -->
+        <Frames>
+            <!-- This would be the place for global settings widgets that apply to all. -->
             <Frame name="$parentProfessionDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT">
@@ -89,7 +89,7 @@
                             <AbsDimension x="15" y="-2"/>
                         </Offset>
                     </Anchor>
-                     <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT">
                         <Offset>
                             <AbsDimension x="-15" y="15"/>
                         </Offset>
@@ -104,7 +104,7 @@
                 <Frames>
                     <!-- These widgets will be generated automatically on the LUA side. -->
                 </Frames>
-            </Frame>
-		</Frames>
+	        </Frame>
+        </Frames>
 	</Frame>
 </Ui>

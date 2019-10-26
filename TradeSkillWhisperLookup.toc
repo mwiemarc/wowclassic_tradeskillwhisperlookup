@@ -1,16 +1,16 @@
 ## Interface: 11302
-## Title: TradeSkillWhisperLookup
+## Title: TradeSkill|cfff7effWhisper|rLookup
 ## Notes: Provides other players the ability to lookup your profession tradeskills by whisper command
 ## Author: mwiemarc aka Maxhealth-Venoxis
-## Version: 0.1.5-beta
-## SavedVariablesPerCharacter: TSWL_Professions
+## Version: 0.2.0-beta
+## SavedVariablesPerCharacter: TSWL_CharacterConfig, TSWL_Professions
 
-lib\ChatThrottleLib\ChatThrottleLib.xml
-localization\localization.de.lua
-localization\localization.en.lua
-defaults.lua
+libs\ChatThrottleLib\ChatThrottleLib.xml
+locale\localization.de.lua
+locale\localization.en.lua
 util.lua
-helpers.lua
+profession.lua
+default_config.lua
 core.lua
 TSWLOptionsPanel.lua
 TSWLOptionsPanel.xml

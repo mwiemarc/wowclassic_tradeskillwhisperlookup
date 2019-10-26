@@ -3,43 +3,47 @@ local TSWL_AddonName, TSWL = ...
 TSWL.util = {}
 
 -- shallow-copy a table
-function TSWL.util.table_shallow_copy(t)
+function TSWL.util.tableShallowCopy(t)
     local copy = {}
+
     for k, v in pairs(t) do
         copy[k] = v
     end
+
     return copy
 end
 
 -- deep-copy a table
-function TSWL.util.table_deep_copy(t)
+function TSWL.util.tableDeepCopy(t)
     local copy = {}
+
     if type(t) == 'table' then
         for k, v in pairs(t) do
-            copy[TSWL.util.table_deep_copy(k)] = TSWL.util.table_deep_copy(v)
+            copy[TSWL.util.tableDeepCopy(k)] = TSWL.util.tableDeepCopy(v)
         end
     else
         copy = t
     end
+
     return copy
 end
 
--- copies fields from defaults to t but only if they are currently nil in t
-function TSWL.util.table_update(t, defaults)
-    for k, v in pairs(defaults) do
+-- copies fields from defaultConfig to t but only if they are currently nil in t
+function TSWL.util.tableUpdate(t, defaultConfig)
+    for k, v in pairs(defaultConfig) do
         if t[k] == nil then
-            t[k] = TSWL.util.table_deep_copy(v)
+            t[k] = TSWL.util.tableDeepCopy(v)
         end
     end
 end
 
 -- trim spaces at start and trail
-function TSWL.util.string_trim(str)
+function TSWL.util.stringTrim(str)
     return str:match('^%s*(.-)%s*$')
 end
 
 -- do string.match for string array
-function TSWL.util.string_match_array(str, arr)
+function TSWL.util.stringMatchArray(str, arr)
     for i, v in ipairs(arr) do
         if string.match(string.lower(str), string.lower(v)) then
             return true
@@ -50,9 +54,9 @@ function TSWL.util.string_match_array(str, arr)
 end
 
 -- split string by delimiter char (utf8 safe)
-function TSWL.util.string_split(str, delimiter)
-    local substr = {}
-    local tmpstr = ''
+function TSWL.util.stringSplit(str, delimiter)
+    local list = {}
+    local tmpStr = ''
 
     if delimiter == nil then
         delimiter = ' '
@@ -60,33 +64,48 @@ function TSWL.util.string_split(str, delimiter)
 
     for c in str:gmatch('[%z\1-\127\194-\244][\128-\191]*') do
         if c == delimiter then
-            if tmpstr ~= '' then
-                table.insert(substr, tmpstr:match('^%s*(.-)%s*$'))
-                tmpstr = ''
+            if tmpStr ~= '' then
+                table.insert(list, tmpStr)
+                tmpStr = ''
             end
         else
-            tmpstr = tmpstr .. c
+            tmpStr = tmpStr .. c
         end
     end
 
-    if tmpstr ~= '' then
-        table.insert(substr, tmpstr:match('^%s*(.-)%s*$'))
+    if tmpStr ~= '' then
+        table.insert(list, tmpStr)
     end
 
-    return substr
+    return list
 end
 
 -- split string by newline (\n)
-function TSWL.util.string_split_newline(str)
-    local str_lines = {}
+function TSWL.util.stringSplitNewline(str)
+    local strLines = {}
 
     for line in str:gmatch('([^\n]*)\n?') do
         local ltrim = line:match('^%s*(.-)%s*$')
 
         if string.len(ltrim) > 0 then
-            table.insert(str_lines, ltrim)
+            table.insert(strLines, ltrim)
         end
     end
 
-    return str_lines
+    return strLines
+end
+
+-- escpae chat link returns display string
+function TSWL.util.unescapeLink(str)
+    local res = tostring(str)
+
+    res = gsub(res, '|c........', '') -- Remove color start.
+    res = gsub(res, '|r', '') -- Remove color end.
+    res = gsub(res, '|H.-|h(.-)|h', '%1') -- Remove links.
+    res = gsub(res, '|T.-|t', '') -- Remove textures.
+    res = gsub(res, '{.-}', '') -- Remove raid target icons.
+    res = string.gsub(res, '%[', '') -- remove opening bracket
+    res = string.gsub(res, '%]', '') -- remove closing bracked
+
+    return res
 end
