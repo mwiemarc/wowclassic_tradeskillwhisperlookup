@@ -35,6 +35,9 @@ TSWL.options.professionConfigWidgets = {
         }
     },
     {
+        label = TSWL.L['OPTIONS_HINT_FEATURED']
+    },
+    {
         name = 'responseHeader',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_HEADER'],
         autocomplete = {
@@ -67,6 +70,20 @@ TSWL.options.professionConfigWidgets = {
         }
     },
     {
+        label = TSWL.L['OPTIONS_HINT_VALUEKEYS_HEADER']
+    },
+    {
+        name = 'responseHintPaging',
+        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'],
+        autocomplete = {
+            dataKey = 'valueKeysPaging',
+            inputDelimiter = ' '
+        }
+    },
+    {
+        label = TSWL.L['OPTIONS_HINT_VALUEKEYS_PAGING']
+    },
+    {
         name = 'responseSkill',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_SKILL'],
         autocomplete = {
@@ -83,12 +100,7 @@ TSWL.options.professionConfigWidgets = {
         }
     },
     {
-        name = 'responseHintPaging',
-        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'],
-        autocomplete = {
-            dataKey = 'valueKeysPaging',
-            inputDelimiter = ' '
-        }
+        label = TSWL.L['OPTIONS_HINT_VALUEKEYS_SKILL']
     },
     {
         name = 'responseHintNoResults',
@@ -254,7 +266,7 @@ function TSWL.options.SetupPanel()
         local value = self:GetText()
 
         if TSWL_CharacterConfig.enableAutocomplete and widget.autocomplete and TSWL.options.autocompleteData[widget.autocomplete.dataKey] then -- accept suggensting
-            if key == 'TAB' then
+            if key == 'TAB' or key == 'ENTER' or key == 'RETURN' then
                 self:SetCursorPosition(string.len(value) + 1)
                 self:HighlightText(0, 0)
 
@@ -367,6 +379,13 @@ function TSWL.options.SetupPanel()
     end
 
     InterfaceOptions_AddCategory(panel)
+
+    for k, v in pairs(TSWL_CharacterConfig.professions) do -- preselect first profession
+        if not TSWLOptionsPanel.selectedProfession then
+            TSWLOptionsPanel.selectedProfession = k
+            panel.refresh()
+        end
+    end
 end
 
 StaticPopupDialogs['TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP'] = {

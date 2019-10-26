@@ -103,7 +103,7 @@
                 </Backdrop>
                 <ScrollChild>              
                     <Frame name="$parentProfessionConfig">
-                        <Size x="200" y="800"/>
+                        <Size x="200" y="1000"/> <!-- todo: dynamic size -->
                         <Anchors>
                             <Anchor point="TOPLEFT"/>
                         </Anchors>
