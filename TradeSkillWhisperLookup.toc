@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Title: TradeSkill|cffff7effWhisper|rLookup
-## Notes: Provides other players the ability to lookup your profession tradeskills by whisper command
+## Notes: Provide other players a way to lookup you Tradeskills by themself
 ## Author: mwiemarc aka Maxhealth-Venoxis
 ## Version: 0.2.0-beta
 ## SavedVariablesPerCharacter: TSWL_CharacterConfig, TSWL_Professions

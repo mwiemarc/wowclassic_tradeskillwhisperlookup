@@ -24,14 +24,12 @@ function TSWL.profession.TryAddProfession()
 
         TSWL.profession.TryUpdateProfessionData() -- update data
 
-        CloseTradeSkill() -- close tradeskill window
-
         TSWL.options.AddProfessionCallback(profName)
     else
         TSWL.options.AddProfessionCallback(nil)
     end
 
-    TSWL.state.addProfession = false
+    TSWL.state.addProfession = false -- is not longer in add mode
 end
 
 function TSWL.profession.TryUpdateProfessionData()
@@ -80,8 +78,12 @@ function TSWL.profession.TryUpdateProfessionData()
                 skill.cd = GetTradeSkillCooldown(i) -- get cooldown timestamp if cooldown left
                 skill.link = GetTradeSkillItemLink(i) -- get itemlink
 
-                if not skill.link then -- fallback: save tradeskill name overwise
-                    skill.link = name
+                if skill.cd then
+                    skill.cd = skill.cd + GetTime()
+                end
+
+                if not skill.link then
+                    skill.link = '[' .. name .. ']' -- fallback: save tradeskill name overwise
                 end
 
                 table.insert(TSWL_CharacterConfig.professions[profName].data.tradeskills, skill) -- save skill
@@ -99,13 +101,12 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
             local skills = {}
             local featured = TSWL.util.stringSplit(prof.config.featured, ';')
 
-            local cnt = 0
-
-            for i, s in ipairs(prof.data.tradeskills) do
-                if cnt <= 16 then -- max one page of featured
-                    if TSWL.util.stringMatchArray(s.name, featured) or TSWL.util.stringMatchArray(TSWL.util.unescapeLink(s.link), featured) then -- lookup tradeskill or item
-                        table.insert(skills, s)
-                        cnt = cnt + 1
+            for i, v in ipairs(featured) do -- get featured in correct order
+                for ii, vv in ipairs(prof.data.tradeskills) do
+                    if #skills < 16 then -- max one page of featured
+                        if TSWL.util.stringMatchArray(vv.name, featured) or TSWL.util.stringMatchArray(TSWL.util.unescapeLink(vv.link), featured) then -- lookup tradeskill or item
+                            table.insert(skills, vv)
+                        end
                     end
                 end
             end
@@ -128,7 +129,7 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
     end
 
     for i, s in ipairs(prof.data.tradeskills) do
-        if string.match(string.lower(s.name), query) or string.match(string.lower(TSWL.util.unescapeLink(s.link)), query) then -- lookup tradeskill or item
+        if string.match(string.lower(s.name), query) or string.match(string.lower(TSWL.util.unescapeLink(s.link)), query) then -- matching tradeskill or item
             table.insert(skills, s)
         end
     end

@@ -4,60 +4,51 @@ local LOCALE = GetLocale()
 if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as fallback language
     local L = {}
 
-    L['LOCALE_HOURS'] = 'hrs.'
-    L['LOCALE_MINUTES'] = 'mins.'
+    L['POPUP_ADD_PROFESSION_TXT'] = 'Please open the Tradeskill window of your desired Profession to continue'
+    L['POPUP_CONFIG_UPDATED_TXT'] = 'Due to a database update, it may be necessary to make some settings again.\n\n|cffffff00Afterwards please open the respective Tradeskill windows to read in the skills again.|r'
 
-    L['POPUP_MSG_ADD_PROFESSION'] = 'Please open the desired Profession window to continue'
-    L['POPUP_MSG_CONFIG_UPDATE_REQUIRED'] = 'Aufgrund eines Updates ist es eventuell nötig einige Einstellungen erneut vorzunehmen.\nIch bitte dies zu entschuldigen und versuche so etwas in Zukunft zu vermeiden.'
+    L['MSG_ADD_PROFESSION_SUCCESS'] = 'Profession added successful'
+    L['MSG_ADD_PROFESSION_ERR_EXISTS'] = 'Profession already added'
 
-    L['MSG_ADD_PROFESSION_SUCCESS'] = 'Profession {{profession}} added successful'
-    L['MSG_ADD_PROFESSION_FAIL'] = 'Failed to add Profession (already added?)'
-
+    L['CONFIG_DEFAULT_RESPONSE_NO_RESULTS'] = '{rt7} No results for your request'
     L['CONFIG_DEFAULT_RESPONSE_HEADER'] = 'Results {{first_index}}-{{last_index}} (of {{num_results}}) (Page {{page}}/{{num_pages}}) {rt3} = Reagents available'
     L['CONFIG_DEFAULT_RESPONSE_FOOTER'] = ''
-    L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'] = 'XxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXx'
-    L['CONFIG_DEFAULT_RESPONSE_FEATURED_FOOTER'] = 'XxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXx'
-    L['CONFIG_DEFAULT_RESPONSE_NO_RESULTS'] = 'No results for your request'
-    L['CONFIG_DEFAULT_RESPONSE_HINT_DELAYED'] = 'It could take a moment to recieve all messages'
+    L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'] = "Hay! This is a selection of my {{num_skills}} Skills. If you got any question don't be afraid to ask ;)"
+    L['CONFIG_DEFAULT_RESPONSE_FEATURED_FOOTER'] = "Not your's? Send {{cmd}} 1 to lookup all of my skills or {{cmd}} SEARCHTERM to search my skills"
+    L['CONFIG_DEFAULT_RESPONSE_HINT_DELAY'] = 'It could take a moment to recieve all messages'
     L['CONFIG_DEFAULT_RESPONSE_HINT_PAGING'] = 'Next page: {{cmd_query}} {{next_page}}'
-    L['CONFIG_DEFAULT_RESPONSE_SKILL'] = '{{item_link}} ({{reagents}}) {{cd}}'
-    L['CONFIG_DEFAULT_RESPONSE_SKILL_CRAFTABLE'] = '{{item_link}} {{num_craftable}}x{rt3} ({{reagents}}) {{cd}}'
+    L['CONFIG_DEFAULT_RESPONSE_SKILL'] = '{{item}} ({{reagents}}) {{cd}}'
+    L['CONFIG_DEFAULT_RESPONSE_SKILL_CRAFTABLE'] = '{{item}} {{num_craftable}}x{rt3} ({{reagents}}) {{cd}}'
+
+    L['LOCALE_COOLDOWN_TIMELEFT_TXT'] = 'Cd timeleft'
+
+    L['LOCALE_SHORT_HOURS'] = 'hrs.'
+    L['LOCALE_SHORT_MINUTES'] = 'mins.'
 
     L['OPTIONS_LABEL_COMMAND'] = 'Whisper command'
-    L['OPTIONS_LABEL_SPELLFIX'] = 'Misspell correction (e.g. pots=pot;flasks=flask;...)'
-    L['OPTIONS_LABEL_FEATURED'] = 'Featured skills (serperate multiple by semicolon)'
-    L['OPTIONS_LABEL_IGNORE_REAGENTS'] = 'Ignore reagents (serperate multiple by semicolon)'
-    L['OPTIONS_LABEL_RESPONSE_HEADER'] = 'Response header'
-    L['OPTIONS_LABEL_RESPONSE_FOOTER'] = 'Response footer (leave empty to disable)'
-    L['OPTIONS_LABEL_RESPONSE_FEATURED_HEADER'] = 'Featured header'
-    L['OPTIONS_LABEL_RESPONSE_FEATURED_FOOTER'] = 'Featured footer (leave empty to disable)'
-    L['OPTIONS_LABEL_RESPONSE_NO_RESULTS'] = 'Response no results'
-    L['OPTIONS_LABEL_RESPONSE_HINT_DELAYED'] = 'Response hint large request'
-    L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'] = 'Response hint paging'
-    L['OPTIONS_LABEL_RESPONSE_SKILL'] = 'Response tradeskill'
-    L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'] = 'Response tradeskill (craftable)'
+    L['OPTIONS_LABEL_SPELLFIX'] = 'Misspell correction'
+    L['OPTIONS_LABEL_FEATURED'] = 'Featured skills'
+    L['OPTIONS_LABEL_HIDE_REAGENTS'] = 'Hide reagents'
+    L['OPTIONS_LABEL_RESPONSE_HEADER'] = 'Response: Header'
+    L['OPTIONS_LABEL_RESPONSE_FOOTER'] = 'Response: Footer\n(leave empty to disable)'
+    L['OPTIONS_LABEL_RESPONSE_FEATURED_HEADER'] = 'Response: Featured skills header'
+    L['OPTIONS_LABEL_RESPONSE_FEATURED_FOOTER'] = 'Response: Featured skills footer\n(leave empty to disable)'
+    L['OPTIONS_LABEL_RESPONSE_NO_RESULTS'] = 'Response: No results'
+    L['OPTIONS_LABEL_RESPONSE_SKILL'] = 'Response: Tradeskill'
+    L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'] = 'Response: Tradeskill (reagents owned)'
+    L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Response hint: Response delay'
+    L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'] = 'Response hint: Paging'
 
-    L['OPTIONS_HINT_VALUEKEYS'] =
-        [[{{first_index}} = index of page first entry
-    {{last_index}} = index of page last entry
-    {{num_results}} = number of results
-    {{num_skills}} = profession total tradeskills
-    {{page}} = current page
-    {{next_page}} = next page
-    {{num_pages}} = number of pages
-    {{request_cmd}} = recieved command
-    {{cmd}} = profession whisper command
-    {{skill_cur}} = your current profession skill level
-    {{skill_max}} = your max profession skill level
-    {{profession}} = profession\n]]
-    L['OPTIONS_HINT_VALUEKEYS_SKILL'] =
-        [[{{index}} = Entry index
-    {{name}} = Tradeskill name
-    {{item_link}} = Tradeskill item link
-    {{reagents}} = Required crafting reagents
-    {{num_craftable}} = Number craftable for owned reagents
-    {{cd}} = Cooldown timeleft (Only shown if skill has active cooldowns)\n]]
-    L['OPTIONS_HINT_FEATURED'] = 'XxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXx'
+    L['OPTIONS_HINT_SPELLFIX'] = 'Define words which will be replaced by another in request.\ne.g. pots=pot or flasks=flask or flaks=flask\n(Split multiple entrys by semicolon)'
+    L['OPTIONS_HINT_FEATURED'] = 'Tradeskills/Items which will be retured instead of the default tradeskill list when just the whisper command is recieved without parameters.\n(Split multiple entrys by semicolon)'
+    L['OPTIONS_HINT_HIDE_REAGENTS'] = 'Reagents should will be hidden in response.\n(Split multiple entrys by semicolon)'
+    L['OPTIONS_HINT_HEADER'] =
+        '{{first_index}} = index of first entry on page | {{last_index}} = index of page last entry on page | {{num_results}} = number of results | {{num_tradeskills}} =profession total tradeskills | {{page}} = current page | {{num_pages}} = number of pages for request | {{request_cmd}} = recieved command | {{cmd}} = profession whisper command | {{skill_cur}} = your current profession skill level | {{skill_max}} = your max profession skill level | {{profession}} = profession'
+    L['OPTIONS_HINT_PAGING'] = '{{page}} = Aktuelle Seite | {{next_page}} = Nächste Seite | {{num_pages}} = Anzahl der Seiten | {{request_cmd}} = Erhaltener Befehl'
+    L['OPTIONS_HINT_SKILL'] = '{{index}} = index of entry on page | {{name}} = Tradeskill name | {{item}} = Item | {{reagents}} = required crafting reagents | {{num_craftable}} = number of craftable for owned reagents | {{cd}} = Cooldown timeleft'
+
+    L['OPTIONS_TOOLTIP_AUTOCOMPLETE'] =
+        'Available for |cff00ffffTradeskills|r/|cff00ffffItems|r and |cff00ffffValuekeys|r\n\nBy pressing |cff00ff00Tab|r or |cff00ff00Enter|r you can accept the suggestion\nHold |cff00ff00Ctrl|r to disable autocompletion temporary\n\n|cffffff00(This functions is in early development stage and can show some unexpected behaviors)|r'
 
     TSWL.L = L
 end

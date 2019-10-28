@@ -1,9 +1,9 @@
 local TSWL_AddonName, TSWL = ...
 
 TSWL.options = {}
-TSWL.options.autocompleteData = {
-    valueKeysHeader = {'{{first_index}}', '{{last_index}}', '{{num_results}}', '{{num_skills}}', '{{page}}', '{{num_pages}}', '{{request_cmd}}', '{{cmd}}', '{{skill_cur}}', '{{skill_max}}', '{{profession}}'},
-    valueKeysSkill = {'{{index}}', '{{name}}', '{{item_link}}', '{{reagents}}', '{{num_craftable}}', '{{cd_timeleft}}'},
+TSWL.options.autocompleteDataset = {
+    valueKeysHeader = {'{{first_index}}', '{{last_index}}', '{{num_results}}', '{{num_tradeskills}}', '{{page}}', '{{num_pages}}', '{{request_cmd}}', '{{cmd}}', '{{skill_cur}}', '{{skill_max}}', '{{profession}}'},
+    valueKeysSkill = {'{{index}}', '{{name}}', '{{item}}', '{{reagents}}', '{{num_craftable}}', '{{cd}}'},
     valueKeysPaging = {'{{page}}', '{{next_page}}', '{{num_pages}}', '{{request_cmd}}'},
     reagents = {},
     tradeskills = {}
@@ -19,18 +19,24 @@ TSWL.options.professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_SPELLFIX']
     },
     {
+        label = TSWL.L['OPTIONS_HINT_SPELLFIX']
+    },
+    {
         name = 'hideReagents',
         label = TSWL.L['OPTIONS_LABEL_HIDE_REAGENTS'],
         autocomplete = {
-            dataKey = 'reagents',
+            datasetKey = 'reagents',
             inputDelimiter = ';'
         }
+    },
+    {
+        label = TSWL.L['OPTIONS_HINT_HIDE_REAGENTS']
     },
     {
         name = 'featured',
         label = TSWL.L['OPTIONS_LABEL_FEATURED'],
         autocomplete = {
-            dataKey = 'tradeskills',
+            datasetKey = 'tradeskills',
             inputDelimiter = ';'
         }
     },
@@ -38,10 +44,14 @@ TSWL.options.professionConfigWidgets = {
         label = TSWL.L['OPTIONS_HINT_FEATURED']
     },
     {
+        name = 'responseNoResults',
+        label = TSWL.L['OPTIONS_LABEL_RESPONSE_NO_RESULTS']
+    },
+    {
         name = 'responseHeader',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_HEADER'],
         autocomplete = {
-            dataKey = 'valueKeysHeader',
+            datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
         }
     },
@@ -49,7 +59,7 @@ TSWL.options.professionConfigWidgets = {
         name = 'responseFooter',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FOOTER'],
         autocomplete = {
-            dataKey = 'valueKeysHeader',
+            datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
         }
     },
@@ -57,7 +67,7 @@ TSWL.options.professionConfigWidgets = {
         name = 'responseFeaturedHeader',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FEATURED_HEADER'],
         autocomplete = {
-            dataKey = 'valueKeysHeader',
+            datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
         }
     },
@@ -65,29 +75,18 @@ TSWL.options.professionConfigWidgets = {
         name = 'responseFeaturedFooter',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FEATURED_FOOTER'],
         autocomplete = {
-            dataKey = 'valueKeysHeader',
+            datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
         }
     },
     {
-        label = TSWL.L['OPTIONS_HINT_VALUEKEYS_HEADER']
-    },
-    {
-        name = 'responseHintPaging',
-        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'],
-        autocomplete = {
-            dataKey = 'valueKeysPaging',
-            inputDelimiter = ' '
-        }
-    },
-    {
-        label = TSWL.L['OPTIONS_HINT_VALUEKEYS_PAGING']
+        label = TSWL.L['OPTIONS_HINT_HEADER']
     },
     {
         name = 'responseSkill',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_SKILL'],
         autocomplete = {
-            dataKey = 'valueKeysSkill',
+            datasetKey = 'valueKeysSkill',
             inputDelimiter = ' '
         }
     },
@@ -95,20 +94,27 @@ TSWL.options.professionConfigWidgets = {
         name = 'responseSkillCraftable',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'],
         autocomplete = {
-            dataKey = 'valueKeysSkill',
+            datasetKey = 'valueKeysSkill',
             inputDelimiter = ' '
         }
     },
     {
-        label = TSWL.L['OPTIONS_HINT_VALUEKEYS_SKILL']
+        label = TSWL.L['OPTIONS_HINT_SKILL']
     },
     {
-        name = 'responseHintNoResults',
-        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_NO_RESULTS']
+        name = 'responseHintPaging',
+        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'],
+        autocomplete = {
+            datasetKey = 'valueKeysPaging',
+            inputDelimiter = ' '
+        }
     },
     {
-        name = 'responseHintDelayed',
-        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_DELAYED']
+        label = TSWL.L['OPTIONS_HINT_PAGING']
+    },
+    {
+        name = 'responseHintDelay',
+        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_DELAY']
     }
 }
 
@@ -121,7 +127,7 @@ function TSWLOptionsPanel_ClickRemoveProfession()
     PlaySound(624) -- GAMEGENERICBUTTONPRESS
 
     local panel = _G['TSWLOptionsPanel']
-    local professionPanel = _G['TSWLOptionsPanelProfessionConfigScrollFrameProfessionConfig']
+    local professionPanel = _G['TSWLOptionsPanelScrollFrameProfessionConfig']
 
     local newProfessions = {}
 
@@ -143,15 +149,27 @@ function TSWLOptionsPanel_ClickAddProfession()
     TSWL.state.addProfession = true
 
     -- show popup, hide menu
-    StaticPopup_Show('TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP')
+    StaticPopup_Show('TSWL_POPUP_ADD_PROFESSION')
     InterfaceOptionsFrame_Show()
 end
 
 function TSWLOptionsPanel_ToggleAutocomplete(self)
-    TSWL_CharacterConfig.enableAutocomplete = _G['TSWLOptionsPanelCheckAutocomplete']:GetChecked()
+    TSWL_CharacterConfig.enableAutocomplete = _G['TSWLOptionsPanelCheckButtonAutocomplete']:GetChecked()
+end
+
+function TSWLOptionsPanel_ShowTooltip(frame, txt)
+    GameTooltip:SetOwner(_G[frame], 'ANCHOR_CURSOR') -- ANCHOR_RIGHT
+    GameTooltip:SetText(TSWL.L[txt], 1.0, 1.0, 1.0, true)
+    GameTooltip:Show()
+end
+
+function TSWLOptionsPanel_HideTooltip()
+    GameTooltip:Hide()
 end
 
 function TSWL.options.AddProfessionCallback(profName, err)
+    CloseTradeSkill() -- close tradeskill window
+
     if profName then
         PlaySound(624) -- GAMEGENERICBUTTONPRESS
 
@@ -160,7 +178,7 @@ function TSWL.options.AddProfessionCallback(profName, err)
         TSWLOptionsPanel.selectedProfession = profName
         professionPanel.refresh()
 
-        print('|cffffff00TS|r|cffff7effW|r|cffffff00L:|r |cff00ff00' .. string.gsub(TSWL.L['MSG_ADD_PROFESSION_SUCCESS'], '%{{profession}}', profName) .. '|r')
+        print('|cffffff00TS|r|cffff7effW|r|cffffff00L:|r |cff00ff00' .. TSWL.L['MSG_ADD_PROFESSION_SUCCESS'] .. '|r')
     else
         PlaySound(847) -- igQuestFailed
 
@@ -168,9 +186,8 @@ function TSWL.options.AddProfessionCallback(profName, err)
     end
 
     -- hide popup, show menu
-    StaticPopup_Hide('TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP')
+    StaticPopup_Hide('TSWL_POPUP_ADD_PROFESSION')
 
-    InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
     InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
 end
 
@@ -261,29 +278,33 @@ function TSWL.options.SetupPanel()
         widgetValueChanged(widget, self:GetText()) -- save to config table
     end
 
-    local function widgetOnKeyUp(self, key) -- accept autocomplete
+    local function widgetOnKeyUp(self, key) -- autocomplete
         local widget = self.widget
         local value = self:GetText()
 
-        if TSWL_CharacterConfig.enableAutocomplete and widget.autocomplete and TSWL.options.autocompleteData[widget.autocomplete.dataKey] then -- accept suggensting
+        --print(key)
+
+        if TSWL_CharacterConfig.enableAutocomplete and widget.autocomplete and TSWL.options.autocompleteDataset[widget.autocomplete.datasetKey] then -- accept suggensting
             if key == 'TAB' or key == 'ENTER' or key == 'RETURN' then -- complete suggestion
                 self:SetCursorPosition(string.len(value) + 1)
                 self:HighlightText(0, 0)
-            elseif not IsControlKeyDown() and key ~= 'BACKSPACE' and key ~= 'DELETE' and key ~= 'LCTRL' and key ~= 'LSHIFT' then -- do autocomplete
-                local ci = self:GetCursorPosition() -- save cursor pos
-                local inputStr = string.sub(value, 1, ci) -- remove selection from query
+            elseif not IsControlKeyDown() or (IsLeftControlKeyDown() and IsRightAltKeyDown()) then -- bypass on ctrl (only, prevents autocomplete on copy/past/select...) down
+                if (string.len(key) == 1 and key:match('%w')) or key == 'SPACE' then -- do autocomplete only if char, number or space was pressed
+                    local ci = self:GetCursorPosition() -- save cursor pos
+                    local inputStr = string.sub(value, 1, ci) -- remove selection from query
 
-                if string.sub(inputStr, -1) ~= widget.autocomplete.inputDelimiter then -- is valid cursor position and last char is not demiter
-                    local splitArr = TSWL.util.stringSplit(inputStr, widget.autocomplete.inputDelimiter) -- get all substrings
-                    local str = #splitArr > 0 and splitArr[#splitArr] and string.lower(splitArr[#splitArr]) or '' -- find last
+                    if string.sub(inputStr, -1) ~= widget.autocomplete.inputDelimiter then -- is valid cursor position and last char is not demiter
+                        local splitArr = TSWL.util.stringSplit(inputStr, widget.autocomplete.inputDelimiter) -- get all substrings
+                        local str = #splitArr > 0 and splitArr[#splitArr] and string.lower(splitArr[#splitArr]) or '' -- find last
 
-                    if string.len(TSWL.util.stringTrim(str)) > 0 then -- has string to search
-                        for i, v in ipairs(TSWL.options.autocompleteData[widget.autocomplete.dataKey]) do
-                            if str == string.sub(string.lower(v), 1, string.len(str)) then -- find first match
-                                self:Insert(string.sub(v, string.len(str) + 1)) -- insert suggestion
-                                self:HighlightText(ci, ci + (string.len(v) - string.len(str))) -- select suggested inset
-                                self:SetCursorPosition(ci) -- restore cursor pos
-                                return
+                        if string.len(TSWL.util.stringTrim(str)) > 0 then -- has string to search
+                            for i, v in ipairs(TSWL.options.autocompleteDataset[widget.autocomplete.datasetKey]) do
+                                if str == string.sub(string.lower(v), 1, string.len(str)) then -- find first match
+                                    self:Insert(string.sub(v, string.len(str) + 1)) -- insert suggestion
+                                    self:HighlightText(ci, ci + (string.len(v) - string.len(str))) -- select suggested inset
+                                    self:SetCursorPosition(ci) -- restore cursor pos
+                                    return
+                                end
                             end
                         end
                     end
@@ -316,10 +337,6 @@ function TSWL.options.SetupPanel()
             widgetFrame:SetScript('OnTextChanged', widgetOnTextChanged)
 
             if widgetFrame then
-                if widget.tooltip then
-                    widgetFrame.tooltipText = widget.tooltip
-                end
-
                 -- Establish cross-references
                 widgetFrame.widget = widget
                 widget.widgetFrame = widgetFrame
@@ -339,19 +356,19 @@ function TSWL.options.SetupPanel()
 
         if TSWLOptionsPanel.selectedProfession then
             -- update autocomplete values
-            TSWL.options.autocompleteData.reagents = {}
-            TSWL.options.autocompleteData.tradeskills = {}
+            TSWL.options.autocompleteDataset.reagents = {}
+            TSWL.options.autocompleteDataset.tradeskills = {}
 
             for k, v in pairs(TSWL_CharacterConfig.professions[TSWLOptionsPanel.selectedProfession].data.tradeskills) do
-                table.insert(TSWL.options.autocompleteData.tradeskills, v.name)
-                table.insert(TSWL.options.autocompleteData.tradeskills, TSWL.util.unescapeLink(v.link))
+                table.insert(TSWL.options.autocompleteDataset.tradeskills, v.name)
+                table.insert(TSWL.options.autocompleteDataset.tradeskills, TSWL.util.unescapeLink(v.link))
 
                 for kk, vv in pairs(v.reagents) do
-                    table.insert(TSWL.options.autocompleteData.reagents, vv.name)
+                    table.insert(TSWL.options.autocompleteDataset.reagents, vv.name)
                 end
 
                 for kk, vv in pairs(v.hiddenReagents) do
-                    table.insert(TSWL.options.autocompleteData.reagents, vv.name)
+                    table.insert(TSWL.options.autocompleteDataset.reagents, vv.name)
                 end
             end
 
@@ -366,7 +383,7 @@ function TSWL.options.SetupPanel()
         end
     end
 
-    _G['TSWLOptionsPanelCheckAutocomplete']:SetChecked(TSWL_CharacterConfig.enableAutocomplete) -- set autocomplete
+    _G['TSWLOptionsPanelCheckButtonAutocomplete']:SetChecked(TSWL_CharacterConfig.enableAutocomplete) -- set autocomplete
 
     -- Display the current version in the title
     _G['TSWLOptionsPanelTitle']:SetText('TradeSkill|cffff7effWhisper|rLookup |cff888888v' .. GetAddOnMetadata('TradeSkillWhisperLookup', 'Version'))
@@ -386,11 +403,11 @@ function TSWL.options.SetupPanel()
     end
 end
 
-StaticPopupDialogs['TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP'] = {
-    text = '<TS|cffff7effW|rL>\n\n' .. TSWL.L['POPUP_MSG_ADD_PROFESSION'] .. '\n',
+StaticPopupDialogs['TSWL_POPUP_ADD_PROFESSION'] = {
+    text = '|cffffff00TradeSkill|r|cffff7effWhisper|r|cffffff00Lookup|r\n\n\n' .. TSWL.L['POPUP_ADD_PROFESSION_TXT'] .. '\n',
     button1 = 'OK',
     OnAccept = function()
-        StaticPopup_Hide('TSWL_OPTIONS_WAITFOR_PROFESSION_POPUP')
+        StaticPopup_Hide('TSWL_POPUP_ADD_PROFESSION')
     end,
     timeout = 0,
     whileDead = true,

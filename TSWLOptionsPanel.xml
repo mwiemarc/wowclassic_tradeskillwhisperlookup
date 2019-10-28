@@ -113,7 +113,7 @@
                     </Frame>
                 </ScrollChild>
             </ScrollFrame>            
-            <CheckButton name="$parentCheckAutocomplete" inherits="InterfaceOptionsBaseCheckButtonTemplate">
+            <CheckButton name="$parentCheckButtonAutocomplete" inherits="InterfaceOptionsBaseCheckButtonTemplate">
                 <Anchors>
                     <Anchor point="TOPRIGHT" relativeTo="$parentScrollFrame">
                         <Offset>
@@ -123,7 +123,7 @@
                 </Anchors>
                 <Layers>
                     <Layer level="ARTWORK">
-                        <FontString name="$parentCheckAutocompleteLabel" inherits="GameFontNormal" text="Autocomplete (alpha)">
+                        <FontString name="$parentCheckButtonAutocompleteLabel" inherits="GameFontNormal" text="Autocomplete (alpha)">
                             <Anchors>
                                 <Anchor point="LEFT" relativePoint="RIGHT">
                                     <Offset>
@@ -137,7 +137,13 @@
                 <Scripts>
                     <OnClick>
                         TSWLOptionsPanel_ToggleAutocomplete()
-                    </OnClick>
+                    </OnClick>                    
+					<OnEnter>
+                        TSWLOptionsPanel_ShowTooltip(self:GetName(), 'OPTIONS_TOOLTIP_AUTOCOMPLETE')
+					</OnEnter>
+					<OnLeave>
+                        TSWLOptionsPanel_HideTooltip()
+					</OnLeave>
                 </Scripts>
             </CheckButton> 
         </Frames>

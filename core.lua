@@ -7,7 +7,7 @@ local function BuildWhisperResponse(prof, query, page, skills)
     local featured = false
 
     if #skills > 0 then
-        if not query and not page and string.len(prof.config.featured) > 0 then -- is featured response?
+        if not query and not page and string.len(prof.config.featured) > 0 then -- response featured skills?
             featured = true
         end
 
@@ -42,8 +42,8 @@ local function BuildWhisperResponse(prof, query, page, skills)
 
         table.insert(resLines, headerStr)
 
-        if #skills >= 8 then -- is large response show delayed hint
-            table.insert(resLines, prof.config.responseHintDelayed)
+        if #skills >= 8 then -- is large response show delay hint
+            table.insert(resLines, prof.config.responseHintDelay)
         end
 
         -- add tradeskill in range
@@ -59,8 +59,8 @@ local function BuildWhisperResponse(prof, query, page, skills)
                 end
 
                 skillStr = string.gsub(skillStr, '%{{index}}', tostring(i)) -- add item link
-                skillStr = string.gsub(skillStr, '%{{name}}', s.name) -- add item link
-                skillStr = string.gsub(skillStr, '%{{item_link}}', s.link) -- add item link
+                skillStr = string.gsub(skillStr, '%{{name}}', s.name) -- add tradeskill name
+                skillStr = string.gsub(skillStr, '%{{item}}', s.link) -- add item link
 
                 local reagentsStr = ''
 
@@ -75,22 +75,30 @@ local function BuildWhisperResponse(prof, query, page, skills)
 
                 skillStr = string.gsub(skillStr, '%{{reagents}}', reagentsStr) -- add reagents
 
+                -- add cooldown timeleft
                 local cdStr = ''
-                local cdMins = floor((s.cd / 60) + 0.5)
 
-                if s.cd and cdMins > 0 then -- has cooldown
-                    cdStr = string.format('(%s %s)', TSWL.L['LOCALE_COOLDOWN_TIMELEFT_TXT'], (cdMins > 60) and (floor((cdMins / 60) + 0.5) .. ' ' .. TSWL.L['LOCALE_SHORT_HOURS']) or (cdMins .. ' ' .. TSWL.L['LOCALE_SHORT_MINUTES']))
+                if s.cd then
+                    local cdTimeleft = s.cd - GetTime()
+
+                    if cdTimeleft > 0 then
+                        local cdMins = floor((cdTimeleft / 60) + 0.5)
+
+                        if cdMins > 0 then -- has cooldown
+                            cdStr = string.format('(%s %s)', TSWL.L['LOCALE_COOLDOWN_TIMELEFT_TXT'], (cdMins > 60) and (floor((cdMins / 60) + 0.5) .. ' ' .. TSWL.L['LOCALE_SHORT_HOURS']) or (cdMins .. ' ' .. TSWL.L['LOCALE_SHORT_MINUTES']))
+                        end
+                    end
                 end
 
                 skillStr = string.gsub(skillStr, '%{{cd}}', cdStr) -- replace cd timeleft with value or empty str
 
-                -- split overlength strings to prevent dcs
+                -- split overlength strings to prevent disconnects
                 if string.len(skillStr) >= 254 then
                     skillStr = string.sub(skillStr, 1, 250) .. '...' -- indicator
 
                     table.insert(resLines, skillStr)
 
-                    skillStr = '...' .. string.sub(skillStr, 251) -- add left str
+                    skillStr = '...' .. string.sub(skillStr, 251) -- add remaining str
                 end
 
                 table.insert(resLines, skillStr) -- insert reponse line
@@ -128,7 +136,7 @@ local function BuildWhisperResponse(prof, query, page, skills)
             table.insert(resLines, footerStr)
         end
     else
-        table.insert(resLines, prof.config.responseHintNoResults) -- no transkills found
+        table.insert(resLines, prof.config.responseNoResults) -- no transkills found
     end
 
     return resLines
@@ -189,7 +197,7 @@ local function ProcessWhisperMessage(player, msg)
     end
 end
 
-local function MigrateOldConfig()
+local function MigrateSavedVariables()
     -- import config from prev. version and show hint
     if TSWL_Professions then
         -- migrate old config
@@ -198,30 +206,36 @@ local function MigrateOldConfig()
 
             TSWL_CharacterConfig.professions[k].config.cmd = v.config.cmd or '!' .. string.lower(k)
             TSWL_CharacterConfig.professions[k].config.spellfix = v.config.txt_spellfix or TSWL_CharacterConfig.professions[k].config.spellfix
-            TSWL_CharacterConfig.professions[k].config.hideReagents = string.gsub(v.config.txt_ignore_reagents, '%{{num_skills}}', '{{num_results}}') or TSWL_CharacterConfig.professions[k].config.hideReagents -- replace pattern
-            TSWL_CharacterConfig.professions[k].config.responseHeader = v.config.txt_res_header or TSWL_CharacterConfig.professions[k].config.responseHeader
-            TSWL_CharacterConfig.professions[k].config.responseFooter = v.config.txt_res_footer or TSWL_CharacterConfig.professions[k].config.resFeaturedFooter
+            TSWL_CharacterConfig.professions[k].config.hideReagents = v.config.txt_ignore_reagents or TSWL_CharacterConfig.professions[k].config.hideReagents -- replace pattern
             TSWL_CharacterConfig.professions[k].config.responseNoResults = v.config.txt_res_empty or TSWL_CharacterConfig.professions[k].config.responseNoResults
-            TSWL_CharacterConfig.professions[k].config.responseHintDelayed = v.config.txt_res_hint_large or TSWL_CharacterConfig.professions[k].config.responseHintDelayed
+            TSWL_CharacterConfig.professions[k].config.responseHeader = string.gsub(v.config.txt_res_header, '%{{num_skills}}', '{{num_results}}') or TSWL_CharacterConfig.professions[k].config.responseHeader
+            TSWL_CharacterConfig.professions[k].config.responseFooter = string.gsub(v.config.txt_res_footer, '%{{num_skills}}', '{{num_results}}') or TSWL_CharacterConfig.professions[k].config.resFeaturedFooter
+            TSWL_CharacterConfig.professions[k].config.responseHintDelay = v.config.txt_res_hint_large or TSWL_CharacterConfig.professions[k].config.responseHintDelay
             TSWL_CharacterConfig.professions[k].config.responseHintPaging = string.gsub(v.config.txt_res_hint_paging, '%{{query_cmd}}', '{{request_cmd}}') or TSWL_CharacterConfig.professions[k].config.responseHintPaging
-            TSWL_CharacterConfig.professions[k].config.responseSkill = v.config.txt_res_skill or TSWL_CharacterConfig.professions[k].config.responseSkill
-            TSWL_CharacterConfig.professions[k].config.responseSkillCraftable = v.config.txt_res_skill_craftable or TSWL_CharacterConfig.professions[k].config.responseSkillCraftable
+            TSWL_CharacterConfig.professions[k].config.responseSkill = string.gsub(v.config.txt_res_skill, '%{{item_link}}', '{{item}}') or TSWL_CharacterConfig.professions[k].config.responseSkill
+            TSWL_CharacterConfig.professions[k].config.responseSkillCraftable = string.gsub(v.config.txt_res_skill_craftable, '%{{item_link}}', '{{item}}') or TSWL_CharacterConfig.professions[k].config.responseSkillCraftable
 
             TSWL_CharacterConfig.professions[k].data.name = k or TSWL_CharacterConfig.professions[k].data.name
             TSWL_CharacterConfig.professions[k].data.skillCur = v.data.skill_cur or TSWL_CharacterConfig.professions[k].data.skillCur
             TSWL_CharacterConfig.professions[k].data.skillMax = v.data.skill_max or TSWL_CharacterConfig.professions[k].data.skillMax
             TSWL_CharacterConfig.professions[k].data.tradeskills = v.data.tradeskills or TSWL_CharacterConfig.professions[k].data.tradeskills
+
+            for i, vv in pairs(TSWL_CharacterConfig.professions[k].data.tradeskills) do
+                TSWL.util.tableUpdate(TSWL_CharacterConfig.professions[k].data.tradeskills[i], TSWL.defaultConfig.ProfessionTradeSkill)
+            end
         end
 
-        -- todo: remove old saved variable in future versions
-        TSWL_Professions = nil -- reset old config saved variable
+        TSWL_Professions = nil -- todo: remove saved variable in future versions
 
-        StaticPopup_Show('TSWL_CORE_CONFIG_UPDATE_REQUIRED') -- show update hint
+        -- show user messages and popup
+        StaticPopup_Show('TSWL_POPUP_CONFIG_UPDATED')
     end
 end
 
 local function Init()
-    -- create config
+    TSWL.state.addProfession = false
+
+    -- update saved variables
     TSWL_CharacterConfig = TSWL_CharacterConfig or {}
     TSWL.util.tableUpdate(TSWL_CharacterConfig, TSWL.defaultConfig.CharacterConfig)
 
@@ -240,10 +254,7 @@ local function Init()
         end
     end
 
-    MigrateOldConfig()
-
-    TSWL.state.addProfession = false
-
+    MigrateSavedVariables() -- migrate old configuration if exists
     TSWL.options.SetupPanel() -- setup options panel
 end
 
@@ -260,7 +271,7 @@ local function MainEventHandler(frame, event, ...)
 
         ProcessWhisperMessage(name, msg)
     elseif event == 'PLAYER_LOGIN' then
-        for k, v in pairs(TSWL_CharacterConfig.professions) do
+        for k, v in pairs(TSWL_CharacterConfig.professions) do -- profession loaded message
             print('|cffffff00TS|r|cffff7effW|r|cffffff00L loaded|r |cff00ff00' .. k .. '|r |cffffff00(|r|cffff7eff' .. v.config.cmd .. '|r|cffffff00)|r')
         end
     elseif event == 'ADDON_LOADED' then
@@ -287,17 +298,15 @@ function SlashCmdList.TSWL_SLASHCOMMAND(msg, editBox)
     if string.len(msg) > 0 then
         ProcessWhisperMessage(nil, msg) -- self test print
     else
-        InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup') -- show options panel
         InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
     end
 end
 
-StaticPopupDialogs['TSWL_CORE_CONFIG_UPDATE_REQUIRED'] = {
-    text = '<TSWL>\n\n' .. TSWL.L['POPUP_MSG_CONFIG_UPDATE_REQUIRED'] .. '\n',
+StaticPopupDialogs['TSWL_POPUP_CONFIG_UPDATED'] = {
+    text = '|cffffff00TradeSkill|r|cffff7effWhisper|r|cffffff00Lookup|r\n\n\n' .. TSWL.L['POPUP_CONFIG_UPDATED_TXT'] .. '\n',
     button1 = 'OK',
     OnAccept = function()
-        StaticPopup_Hide('TSWL_CORE_CONFIG_UPDATE_REQUIRED')
-        InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
+        StaticPopup_Hide('TSWL_POPUP_CONFIG_UPDATED')
         InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
     end,
     timeout = 0,
