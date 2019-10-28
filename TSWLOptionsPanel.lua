@@ -16,32 +16,26 @@ TSWL.options.professionConfigWidgets = {
     },
     {
         name = 'spellfix',
-        label = TSWL.L['OPTIONS_LABEL_SPELLFIX']
-    },
-    {
-        label = TSWL.L['OPTIONS_HINT_SPELLFIX']
+        label = TSWL.L['OPTIONS_LABEL_SPELLFIX'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_SPELLFIX']
     },
     {
         name = 'hideReagents',
         label = TSWL.L['OPTIONS_LABEL_HIDE_REAGENTS'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_HIDE_REAGENTS'],
         autocomplete = {
             datasetKey = 'reagents',
             inputDelimiter = ';'
         }
     },
     {
-        label = TSWL.L['OPTIONS_HINT_HIDE_REAGENTS']
-    },
-    {
         name = 'featured',
         label = TSWL.L['OPTIONS_LABEL_FEATURED'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_FEATURED'],
         autocomplete = {
             datasetKey = 'tradeskills',
             inputDelimiter = ';'
         }
-    },
-    {
-        label = TSWL.L['OPTIONS_HINT_FEATURED']
     },
     {
         name = 'responseNoResults',
@@ -50,6 +44,7 @@ TSWL.options.professionConfigWidgets = {
     {
         name = 'responseHeader',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_HEADER'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
             datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
@@ -58,6 +53,7 @@ TSWL.options.professionConfigWidgets = {
     {
         name = 'responseFooter',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FOOTER'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
             datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
@@ -66,6 +62,7 @@ TSWL.options.professionConfigWidgets = {
     {
         name = 'responseFeaturedHeader',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FEATURED_HEADER'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
             datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
@@ -74,17 +71,16 @@ TSWL.options.professionConfigWidgets = {
     {
         name = 'responseFeaturedFooter',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FEATURED_FOOTER'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
             datasetKey = 'valueKeysHeader',
             inputDelimiter = ' '
         }
     },
     {
-        label = TSWL.L['OPTIONS_HINT_HEADER']
-    },
-    {
         name = 'responseSkill',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_SKILL'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_SKILL'],
         autocomplete = {
             datasetKey = 'valueKeysSkill',
             inputDelimiter = ' '
@@ -93,30 +89,46 @@ TSWL.options.professionConfigWidgets = {
     {
         name = 'responseSkillCraftable',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_SKILL'],
         autocomplete = {
             datasetKey = 'valueKeysSkill',
             inputDelimiter = ' '
         }
     },
     {
-        label = TSWL.L['OPTIONS_HINT_SKILL']
-    },
-    {
         name = 'responseHintPaging',
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HINT_PAGING'],
         autocomplete = {
             datasetKey = 'valueKeysPaging',
             inputDelimiter = ' '
         }
     },
     {
-        label = TSWL.L['OPTIONS_HINT_PAGING']
-    },
-    {
         name = 'responseHintDelay',
-        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_DELAY']
+        label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'],
+        tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HINT_DELAY']
     }
 }
+
+-- set tooltip for xml frames
+_G['TSWLOptionsPanelCheckButtonAutocomplete'].tooltip = TSWL.L['OPTIONS_TOOLTIP_AUTOCOMPLETE']
+
+-- global functions called by xml frames
+function TSWLOptionsPanel_ShowTooltip(frame)
+    GameTooltip:SetOwner(frame, 'ANCHOR_BOTTOMRIGHT', -(frame:GetWidth() + 8)) -- ANCHOR_RIGHT ANCHOR_CURSOR
+    --GameTooltip:SetPoint('TOPLEFT', frame, 'BOTTOMRIGHT')
+    GameTooltip:SetText(frame.tooltip, 1.0, 1.0, 1.0, true)
+    GameTooltip:Show()
+end
+
+function TSWLOptionsPanel_HideTooltip()
+    GameTooltip:Hide()
+end
+
+function TSWLOptionsPanel_SetAutocomplete(self)
+    TSWL_CharacterConfig.enableAutocomplete = _G['TSWLOptionsPanelCheckButtonAutocomplete']:GetChecked()
+end
 
 function TSWLOptionsPanel_ClickRemoveProfession()
     if TSWLOptionsPanel.selectedProfession == nil then
@@ -153,20 +165,6 @@ function TSWLOptionsPanel_ClickAddProfession()
     InterfaceOptionsFrame_Show()
 end
 
-function TSWLOptionsPanel_ToggleAutocomplete(self)
-    TSWL_CharacterConfig.enableAutocomplete = _G['TSWLOptionsPanelCheckButtonAutocomplete']:GetChecked()
-end
-
-function TSWLOptionsPanel_ShowTooltip(frame, txt)
-    GameTooltip:SetOwner(_G[frame], 'ANCHOR_CURSOR') -- ANCHOR_RIGHT
-    GameTooltip:SetText(TSWL.L[txt], 1.0, 1.0, 1.0, true)
-    GameTooltip:Show()
-end
-
-function TSWLOptionsPanel_HideTooltip()
-    GameTooltip:Hide()
-end
-
 function TSWL.options.AddProfessionCallback(profName, err)
     CloseTradeSkill() -- close tradeskill window
 
@@ -197,7 +195,6 @@ function TSWL.options.SetupPanel()
     local professionDropdown = _G['TSWLOptionsPanelProfessionDropDown']
 
     panel.selectedProfession = nil
-
     professionPanel:Hide()
 
     -- Setup the drop down menu
@@ -337,6 +334,11 @@ function TSWL.options.SetupPanel()
             widgetFrame:SetScript('OnTextChanged', widgetOnTextChanged)
 
             if widgetFrame then
+                if widget.tooltip then
+                    widgetFrame.tooltip = widget.tooltip
+                    widgetFrame:SetScript('OnEnter', TSWLOptionsPanel_ShowTooltip)
+                    widgetFrame:SetScript('OnLeave', TSWLOptionsPanel_HideTooltip)
+                end
                 -- Establish cross-references
                 widgetFrame.widget = widget
                 widget.widgetFrame = widgetFrame

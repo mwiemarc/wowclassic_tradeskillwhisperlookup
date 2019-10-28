@@ -5,12 +5,12 @@ if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as 
     local L = {}
 
     L['POPUP_ADD_PROFESSION_TXT'] = 'Please open the Tradeskill window of your desired Profession to continue'
-    L['POPUP_CONFIG_UPDATED_TXT'] = 'Due to a database update, it may be necessary to make some settings again.\n\n|cffffff00Afterwards please open the respective Tradeskill windows to read in the skills again.|r'
+    L['POPUP_CONFIG_UPDATED_TXT'] = '|cffff0000Due to a database update, it may be necessary to make some settings again.|f\n\n|cffffff00Afterwards please open the respective Tradeskill windows to read in the skills again.|r'
 
     L['MSG_ADD_PROFESSION_SUCCESS'] = 'Profession added successful'
     L['MSG_ADD_PROFESSION_ERR_EXISTS'] = 'Profession already added'
 
-    L['CONFIG_DEFAULT_RESPONSE_NO_RESULTS'] = '{rt7} No results for your request'
+    L['CONFIG_DEFAULT_RESPONSE_NO_RESULTS'] = 'No results for your request'
     L['CONFIG_DEFAULT_RESPONSE_HEADER'] = 'Results {{first_index}}-{{last_index}} (of {{num_results}}) (Page {{page}}/{{num_pages}}) {rt3} = Reagents available'
     L['CONFIG_DEFAULT_RESPONSE_FOOTER'] = ''
     L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'] = "Hay! This is a selection of my {{num_skills}} Skills. If you got any question don't be afraid to ask ;)"
@@ -30,25 +30,28 @@ if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as 
     L['OPTIONS_LABEL_FEATURED'] = 'Featured skills'
     L['OPTIONS_LABEL_HIDE_REAGENTS'] = 'Hide reagents'
     L['OPTIONS_LABEL_RESPONSE_HEADER'] = 'Response: Header'
-    L['OPTIONS_LABEL_RESPONSE_FOOTER'] = 'Response: Footer\n(leave empty to disable)'
+    L['OPTIONS_LABEL_RESPONSE_FOOTER'] = 'Response: Footer'
     L['OPTIONS_LABEL_RESPONSE_FEATURED_HEADER'] = 'Response: Featured skills header'
-    L['OPTIONS_LABEL_RESPONSE_FEATURED_FOOTER'] = 'Response: Featured skills footer\n(leave empty to disable)'
+    L['OPTIONS_LABEL_RESPONSE_FEATURED_FOOTER'] = 'Response: Featured skills footer'
     L['OPTIONS_LABEL_RESPONSE_NO_RESULTS'] = 'Response: No results'
     L['OPTIONS_LABEL_RESPONSE_SKILL'] = 'Response: Tradeskill'
     L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'] = 'Response: Tradeskill (reagents owned)'
     L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Response hint: Response delay'
     L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'] = 'Response hint: Paging'
 
-    L['OPTIONS_HINT_SPELLFIX'] = 'Define words which will be replaced by another in request.\ne.g. pots=pot or flasks=flask or flaks=flask\n(Split multiple entrys by semicolon)'
-    L['OPTIONS_HINT_FEATURED'] = 'Tradeskills/Items which will be retured instead of the default tradeskill list when just the whisper command is recieved without parameters.\n(Split multiple entrys by semicolon)'
-    L['OPTIONS_HINT_HIDE_REAGENTS'] = 'Reagents should will be hidden in response.\n(Split multiple entrys by semicolon)'
-    L['OPTIONS_HINT_HEADER'] =
-        '{{first_index}} = index of first entry on page | {{last_index}} = index of page last entry on page | {{num_results}} = number of results | {{num_tradeskills}} =profession total tradeskills | {{page}} = current page | {{num_pages}} = number of pages for request | {{request_cmd}} = recieved command | {{cmd}} = profession whisper command | {{skill_cur}} = your current profession skill level | {{skill_max}} = your max profession skill level | {{profession}} = profession'
-    L['OPTIONS_HINT_PAGING'] = '{{page}} = Aktuelle Seite | {{next_page}} = Nächste Seite | {{num_pages}} = Anzahl der Seiten | {{request_cmd}} = Erhaltener Befehl'
-    L['OPTIONS_HINT_SKILL'] = '{{index}} = index of entry on page | {{name}} = Tradeskill name | {{item}} = Item | {{reagents}} = required crafting reagents | {{num_craftable}} = number of craftable for owned reagents | {{cd}} = Cooldown timeleft'
-
     L['OPTIONS_TOOLTIP_AUTOCOMPLETE'] =
         'Available for |cff00ffffTradeskills|r/|cff00ffffItems|r and |cff00ffffValuekeys|r\n\nBy pressing |cff00ff00Tab|r or |cff00ff00Enter|r you can accept the suggestion\nHold |cff00ff00Ctrl|r to disable autocompletion temporary\n\n|cffffff00(This functions is in early development stage and can show some unexpected behaviors)|r'
+    L['OPTIONS_TOOLTIP_SPELLFIX'] = 'Define words which will be replaced by another in request.\ne.g. |cff00ff00pots=pot|r or |cff00ff00flasks=flask|r or |cff00ff00flaks=flask|r\n\n|cffffff00(Split multiple entrys by semicolon)|r'
+    L['OPTIONS_TOOLTIP_FEATURED'] = 'Define Tradeskills/Items which will be retured instead of the default tradeskill list when just the whisper command is recieved without parameters.\n\n|cffffff00(Split multiple entrys by semicolon)|r'
+    L['OPTIONS_TOOLTIP_HIDE_REAGENTS'] = 'Define Reagents that should be hidden in response.\n\n|cffffff00(Split multiple entrys by semicolon)|r'
+    L['OPTIONS_TOOLTIP_RESPONSE_HEADER'] =
+        '|cff00ffffValuekeys|r\n\n|cff00ff00{{first_index}}|r = index of first entry on page\n|cff00ff00{{last_index}}|r = index of page last entry on page\n|cff00ff00{{num_results}}|r = number of results\n|cff00ff00{{num_tradeskills}}|r =profession total tradeskills\n|cff00ff00{{page}}|r = current page\n|cff00ff00{{num_pages}}|r = number of pages for request\n|cff00ff00{{request_cmd}}|r = recieved command\n|cff00ff00{{cmd}}|r = profession whisper command\n|cff00ff00{{skill_cur}}|r = your current profession skill level\n|cff00ff00{{skill_max}}|r = your max profession skill level\n|cff00ff00{{profession}}|r = profession'
+    L['OPTIONS_TOOLTIP_RESPONSE_SKILL'] =
+        '|cff00ffffValuekeys|r\n\n|cff00ff00{{index}}|r = index of entry on page\n|cff00ff00{{name}}|r = Tradeskill name\n|cff00ff00{{item}}|r = Item\n|cff00ff00{{reagents}}|r = required crafting reagents\n|cff00ff00{{num_craftable}}|r = number of craftable for owned reagents\n|cff00ff00{{cd}}|r = Cooldown timeleft'
+    L['OPTIONS_TOOLTIP_RESPONSE_FOOTER'] = '|cffffff00(Leave empty to disable)|r'
+    L['OPTIONS_TOOLTIP_RESPONSE_FEATURED_FOOTER'] = '|cffffff00(Leave empty to disable)|r'
+    L['OPTIONS_TOOLTIP_RESPONSE_HINT_PAGING'] = '|cff00ffffValuekeys|r\n\n|cff00ff00{{page}}|r = current page\n|cff00ff00{{next_page}}|r = next page\n|cff00ff00{{num_pages}}|r = number of pages\n|cff00ff00{{request_cmd}}|r = recieved command'
+    L['OPTIONS_TOOLTIP_RESPONSE_HINT_DELAY'] = 'If there are a large number of results, some messages will be delayed.\n\n|cffffff00(If too many messages are sent at once it can come to a disconnect otherwise)|r'
 
     TSWL.L = L
 end

@@ -3,7 +3,7 @@ local TSWL_AddonName, TSWL = ...
 TSWL.state = {}
 
 local function BuildWhisperResponse(prof, query, page, skills)
-    local resLines = {}
+    local resMsgs = {}
     local featured = false
 
     if #skills > 0 then
@@ -40,10 +40,10 @@ local function BuildWhisperResponse(prof, query, page, skills)
         headerStr = string.gsub(headerStr, '%{{skill_max}}', tostring(prof.data.skillMax))
         headerStr = string.gsub(headerStr, '%{{profession}}', prof.data.name)
 
-        table.insert(resLines, headerStr)
+        table.insert(resMsgs, headerStr)
 
         if #skills >= 8 then -- is large response show delay hint
-            table.insert(resLines, prof.config.responseHintDelay)
+            table.insert(resMsgs, prof.config.responseHintDelay)
         end
 
         -- add tradeskill in range
@@ -92,16 +92,7 @@ local function BuildWhisperResponse(prof, query, page, skills)
 
                 skillStr = string.gsub(skillStr, '%{{cd}}', cdStr) -- replace cd timeleft with value or empty str
 
-                -- split overlength strings to prevent disconnects
-                if string.len(skillStr) >= 254 then
-                    skillStr = string.sub(skillStr, 1, 250) .. '...' -- indicator
-
-                    table.insert(resLines, skillStr)
-
-                    skillStr = '...' .. string.sub(skillStr, 251) -- add remaining str
-                end
-
-                table.insert(resLines, skillStr) -- insert reponse line
+                table.insert(resMsgs, skillStr) -- insert reponse line
             end
         end
 
@@ -114,7 +105,7 @@ local function BuildWhisperResponse(prof, query, page, skills)
             hintPagingStr = string.gsub(hintPagingStr, '%{{next_page}}', tostring(page + 1))
             hintPagingStr = string.gsub(hintPagingStr, '%{{num_pages}}', tostring(numPages))
 
-            table.insert(resLines, hintPagingStr)
+            table.insert(resMsgs, hintPagingStr)
         end
 
         -- add footer if set
@@ -133,13 +124,25 @@ local function BuildWhisperResponse(prof, query, page, skills)
             footerStr = string.gsub(footerStr, '%{{skill_max}}', tostring(prof.data.skillMax))
             footerStr = string.gsub(footerStr, '%{{profession}}', prof.data.name)
 
-            table.insert(resLines, footerStr)
+            table.insert(resMsgs, footerStr)
         end
     else
-        table.insert(resLines, prof.config.responseNoResults) -- no transkills found
+        table.insert(resMsgs, prof.config.responseNoResults) -- no transkills found
     end
 
-    return resLines
+    -- split overlong strings into multiple
+    local mi = 1
+
+    while mi <= #resMsgs do
+        if string.len(resMsgs[mi]) > 254 then -- overlength msg
+            table.insert(resMsgs, mi + 1, string.sub(resMsgs[mi], 255)) -- insert second substr behind
+            resMsgs[mi] = string.sub(resMsgs[mi], 1, 254) -- cut down
+        end
+
+        mi = mi + 1
+    end
+
+    return resMsgs
 end
 
 local function ParseWhisperMessage(msg)

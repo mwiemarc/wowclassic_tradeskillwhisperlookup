@@ -29,7 +29,6 @@
             </Layer>
         </Layers>
         <Frames>
-            <!-- This would be the place for global settings widgets that apply to all. -->
             <Frame name="$parentProfessionDropDown" inherits="UIDropDownMenuTemplate" enableMouse="true">
                 <Anchors>
                     <Anchor point="TOPLEFT" relativeTo="$parentSubText" relativePoint="BOTTOMLEFT">
@@ -38,19 +37,6 @@
                         </Offset>
                     </Anchor>
                 </Anchors>
-                <Layers>
-                    <Layer level="BACKGROUND">
-                        <FontString name="$parentLabel" inherits="GameFontNormal" text="Configure Profession">
-                            <Anchors>
-                                <Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
-                                    <Offset>
-                                        <AbsDimension x="16" y="3"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </FontString>
-                    </Layer>
-                </Layers>
             </Frame>
             <Button name="$parentAddProfession" inherits="UIPanelButtonTemplate" text="+">
                 <Anchors>
@@ -103,7 +89,7 @@
                 </Backdrop>
                 <ScrollChild>              
                     <Frame name="$parentProfessionConfig">
-                        <Size x="200" y="1000"/> <!-- todo: dynamic size -->
+                        <Size x="200" y="520"/> <!-- todo: dynamic height -->
                         <Anchors>
                             <Anchor point="TOPLEFT"/>
                         </Anchors>
@@ -117,13 +103,13 @@
                 <Anchors>
                     <Anchor point="TOPRIGHT" relativeTo="$parentScrollFrame">
                         <Offset>
-                            <AbsDimension x="-132" y="32"/>
+                            <AbsDimension x="-90" y="32"/>
                         </Offset>
                     </Anchor>
                 </Anchors>
                 <Layers>
                     <Layer level="ARTWORK">
-                        <FontString name="$parentCheckButtonAutocompleteLabel" inherits="GameFontNormal" text="Autocomplete (alpha)">
+                        <FontString name="$parentLabel" inherits="GameFontNormal" text="Autocomplete">
                             <Anchors>
                                 <Anchor point="LEFT" relativePoint="RIGHT">
                                     <Offset>
@@ -134,16 +120,16 @@
                         </FontString>
                     </Layer>
                 </Layers>
-                <Scripts>
-                    <OnClick>
-                        TSWLOptionsPanel_ToggleAutocomplete()
-                    </OnClick>                    
+                <Scripts>          
 					<OnEnter>
-                        TSWLOptionsPanel_ShowTooltip(self:GetName(), 'OPTIONS_TOOLTIP_AUTOCOMPLETE')
+                        TSWLOptionsPanel_ShowTooltip(self)
 					</OnEnter>
 					<OnLeave>
                         TSWLOptionsPanel_HideTooltip()
 					</OnLeave>
+                    <OnClick>
+                        TSWLOptionsPanel_SetAutocomplete()
+                    </OnClick>  
                 </Scripts>
             </CheckButton> 
         </Frames>
