@@ -117,7 +117,6 @@ _G['TSWLOptionsPanelCheckButtonAutocomplete'].tooltip = TSWL.L['OPTIONS_TOOLTIP_
 -- global functions called by xml frames
 function TSWLOptionsPanel_ShowTooltip(frame)
     GameTooltip:SetOwner(frame, 'ANCHOR_BOTTOMRIGHT', -(frame:GetWidth() + 8)) -- ANCHOR_RIGHT ANCHOR_CURSOR
-    --GameTooltip:SetPoint('TOPLEFT', frame, 'BOTTOMRIGHT')
     GameTooltip:SetText(frame.tooltip, 1.0, 1.0, 1.0, true)
     GameTooltip:Show()
 end

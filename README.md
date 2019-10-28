@@ -12,4 +12,4 @@
 ## screenshots
 
 ![Example Requests/Responses](https://i.imgur.com/clyrzmQ.jpg "Request/Response examples")
-![Config example](https://i.imgur.com/zIxD2Wc.jpg "Config example")
+![Config example](https://i.imgur.com/ENTlPoT.jpg "Config example")
