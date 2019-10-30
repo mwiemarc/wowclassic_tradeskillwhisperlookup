@@ -14,15 +14,19 @@ function TSWL.profession.GetProfessionByCmd(cmd)
     return nil
 end
 
-function TSWL.profession.TryAddProfession()
-    local profName, skillCur, skillMax = GetTradeSkillLine()
+function TSWL.profession.TryAddProfession(isCrafting)
+    if isCrafting then
+        GetTradeSkillLine = GetCraftDisplaySkillLine
+    end
 
-    if not TSWL_CharacterConfig.professions[profName] then
+    local profName = GetTradeSkillLine()
+
+    if profName and not TSWL_CharacterConfig.professions[profName] then
         TSWL_CharacterConfig.professions[profName] = TSWL.util.tableDeepCopy(TSWL.defaultConfig.Profession)
         TSWL_CharacterConfig.professions[profName].config.cmd = '!' .. string.lower(profName)
         TSWL_CharacterConfig.professions[profName].data.name = profName
 
-        TSWL.profession.TryUpdateProfessionData() -- update data
+        TSWL.profession.TryUpdateProfessionData(isCrafting) -- update data
 
         TSWL.options.AddProfessionCallback(profName)
     else
@@ -32,10 +36,36 @@ function TSWL.profession.TryAddProfession()
     TSWL.state.addProfession = false -- is not longer in add mode
 end
 
-function TSWL.profession.TryUpdateProfessionData()
+function TSWL.profession.TryUpdateProfessionData(isCrafting)
+    local GetTradeSkillLine = GetTradeSkillLine
+    local GetNumTradeSkills = GetNumTradeSkills
+    local GetTradeSkillInfo = GetTradeSkillInfo
+    local GetTradeSkillCooldown = GetTradeSkillCooldown
+    local GetTradeSkillItemLink = GetTradeSkillItemLink
+    local GetTradeSkillNumReagents = GetTradeSkillNumReagents
+    local GetTradeSkillReagentInfo = GetTradeSkillReagentInfo
+
+    if isCrafting then -- change functions for enchanting
+        GetTradeSkillLine = GetCraftDisplaySkillLine
+        GetNumTradeSkills = GetNumCrafts
+        GetTradeSkillItemLink = GetCraftItemLink
+        GetTradeSkillNumReagents = GetCraftNumReagents
+        GetTradeSkillReagentInfo = GetCraftReagentInfo
+
+        GetTradeSkillInfo = function(i)
+            local name, _, kind, num = GetCraftInfo(i)
+
+            return name, kind, num
+        end
+
+        GetTradeSkillCooldown = function()
+            return nil
+        end
+    end
+
     local profName, skillCur, skillMax = GetTradeSkillLine()
 
-    if TSWL_CharacterConfig.professions[profName] then
+    if profName and TSWL_CharacterConfig.professions[profName] then
         TSWL_CharacterConfig.professions[profName].data.skillCur = skillCur
         TSWL_CharacterConfig.professions[profName].data.skillMax = skillMax
         TSWL_CharacterConfig.professions[profName].data.tradeskills = {} -- reinit saved skills

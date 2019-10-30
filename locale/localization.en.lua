@@ -36,8 +36,8 @@ if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as 
     L['OPTIONS_LABEL_RESPONSE_NO_RESULTS'] = 'Response: No results'
     L['OPTIONS_LABEL_RESPONSE_SKILL'] = 'Response: Tradeskill'
     L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'] = 'Response: Tradeskill (reagents owned)'
-    L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Response hint: Response delay'
     L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'] = 'Response hint: Paging'
+    L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Response hint: Response delay'
 
     L['OPTIONS_TOOLTIP_AUTOCOMPLETE'] =
         'Available for |cff00ffffTradeskills|r/|cff00ffffItems|r and |cff00ffffValuekeys|r\n\nBy pressing |cff00ff00Tab|r or |cff00ff00Enter|r you can accept the suggestion\nHold |cff00ff00Ctrl|r to disable autocompletion temporary\n\n|cffffff00(This functions is in early development stage and can show some unexpected behaviors)|r'

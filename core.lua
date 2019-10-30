@@ -269,6 +269,12 @@ local function MainEventHandler(frame, event, ...)
         else
             TSWL.profession.TryUpdateProfessionData()
         end
+    elseif event == 'CRAFT_UPDATE' then
+        if TSWL.state.addProfession then
+            TSWL.profession.TryAddProfession(true)
+        else
+            TSWL.profession.TryUpdateProfessionData(true)
+        end
     elseif event == 'CHAT_MSG_WHISPER' then
         local msg, name = ...
 
@@ -289,6 +295,7 @@ end
 -- create coreframe and register events
 local mainFrame = CreateFrame('Frame')
 mainFrame:RegisterEvent('TRADE_SKILL_UPDATE')
+mainFrame:RegisterEvent('CRAFT_UPDATE')
 mainFrame:RegisterEvent('CHAT_MSG_WHISPER')
 mainFrame:RegisterEvent('PLAYER_LOGIN')
 mainFrame:RegisterEvent('ADDON_LOADED')

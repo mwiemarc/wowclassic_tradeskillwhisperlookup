@@ -19,8 +19,8 @@ TSWL.defaultConfig.Profession = {
         responseFooter = TSWL.L['CONFIG_DEFAULT_RESPONSE_FOOTER'],
         responseFeaturedHeader = TSWL.L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'],
         responseFeaturedFooter = TSWL.L['CONFIG_DEFAULT_RESPONSE_FEATURED_FOOTER'],
-        responseHintDelay = TSWL.L['CONFIG_DEFAULT_RESPONSE_HINT_DELAY'],
         responseHintPaging = TSWL.L['CONFIG_DEFAULT_RESPONSE_HINT_PAGING'],
+        responseHintDelay = TSWL.L['CONFIG_DEFAULT_RESPONSE_HINT_DELAY'],
         responseSkill = TSWL.L['CONFIG_DEFAULT_RESPONSE_SKILL'],
         responseSkillCraftable = TSWL.L['CONFIG_DEFAULT_RESPONSE_SKILL_CRAFTABLE']
     },

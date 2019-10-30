@@ -37,8 +37,8 @@ if LOCALE == 'deDE' then
     L['OPTIONS_LABEL_RESPONSE_NO_RESULTS'] = 'Anwort: Keine Treffer'
     L['OPTIONS_LABEL_RESPONSE_SKILL'] = 'Antwort: Fertigkeit'
     L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'] = 'Antwort: Fertigkeit (Material vorhanden)'
-    L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Antwort Hinweis: Antwortverzögerung'
     L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'] = 'Antwort Hinweis: Seiten'
+    L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Antwort Hinweis: Antwortverzögerung'
 
     L['OPTIONS_TOOLTIP_AUTOCOMPLETE'] =
         'Verfügbar für |cff00ffffFertigkeiten|r/|cff00ffffItems|r und |cff00ffffWerteschlüssel|r\n\nMit |cff00ff00Tab|r oder |cff00ff00Enter|r können Sie den Vorschlag akzeptieren\nDurch |cff00ff00Strg|r können Sie die Autovervollständigung kurzzeitig aussetzten\n\n|cffffff00(Diese Funktion befindet sich noch in Entwicklung und könnte unerwartetes Verhalten zeigen)|r'

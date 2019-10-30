@@ -166,6 +166,7 @@ end
 
 function TSWL.options.AddProfessionCallback(profName, err)
     CloseTradeSkill() -- close tradeskill window
+    CloseCraft() -- close craft window
 
     if profName then
         PlaySound(624) -- GAMEGENERICBUTTONPRESS
