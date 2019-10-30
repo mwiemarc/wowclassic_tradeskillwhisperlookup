@@ -134,7 +134,10 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
             for i, v in ipairs(featured) do -- get featured in correct order
                 for ii, vv in ipairs(prof.data.tradeskills) do
                     if #skills < 16 then -- max one page of featured
-                        if TSWL.util.stringMatchArray(vv.name, featured) or TSWL.util.stringMatchArray(TSWL.util.unescapeLink(vv.link), featured) then -- lookup tradeskill or item
+                        if
+                            string.match(string.lower(vv.name), string.lower(v)) or string.lower(vv.name) == string.lower(v) or string.match(string.lower(TSWL.util.unescapeLink(vv.link)), string.lower(v)) or
+                                string.lower(TSWL.util.unescapeLink(vv.link)) == string.lower(v)
+                         then -- lookup tradeskill or item
                             table.insert(skills, vv)
                         end
                     end
@@ -159,7 +162,7 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
     end
 
     for i, s in ipairs(prof.data.tradeskills) do
-        if string.match(string.lower(s.name), query) or string.match(string.lower(TSWL.util.unescapeLink(s.link)), query) then -- matching tradeskill or item
+        if string.match(string.lower(s.name), query) or string.lower(s.name) == query or string.match(string.lower(TSWL.util.unescapeLink(s.link)), query) or string.lower(TSWL.util.unescapeLink(s.link)) == query then -- matching tradeskill or item
             table.insert(skills, s)
         end
     end
