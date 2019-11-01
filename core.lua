@@ -78,15 +78,11 @@ local function BuildWhisperResponse(prof, query, page, skills)
                 -- add cooldown timeleft
                 local cdStr = ''
 
-                if s.cd then
-                    local cdTimeleft = s.cd - GetTime()
+                if s.cd and s.cd > time() then
+                    local cdMins = floor(((s.cd - time()) / 60) + 0.5)
 
-                    if cdTimeleft > 0 then
-                        local cdMins = floor((cdTimeleft / 60) + 0.5)
-
-                        if cdMins > 0 then -- has cooldown
-                            cdStr = string.format('(%s %s)', TSWL.L['LOCALE_COOLDOWN_TIMELEFT_TXT'], (cdMins > 60) and (floor((cdMins / 60) + 0.5) .. ' ' .. TSWL.L['LOCALE_SHORT_HOURS']) or (cdMins .. ' ' .. TSWL.L['LOCALE_SHORT_MINUTES']))
-                        end
+                    if cdMins > 0 then -- has cooldown
+                        cdStr = string.format('(%s %s)', TSWL.L['LOCALE_COOLDOWN_TIMELEFT_TXT'], (cdMins > 60) and (floor((cdMins / 60) + 0.5) .. ' ' .. TSWL.L['LOCALE_SHORT_HOURS']) or (cdMins .. ' ' .. TSWL.L['LOCALE_SHORT_MINUTES']))
                     end
                 end
 
@@ -146,7 +142,7 @@ local function BuildWhisperResponse(prof, query, page, skills)
 end
 
 local function ParseWhisperMessage(msg)
-    local args = TSWL.util.stringSplit(TSWL.util.unescapeLink(msg))
+    local args = TSWL.util.stringSplit(TSWL.util.linkToName(msg))
     local cmd, query, page
 
     if #args == 1 or (#args == 2 and tonumber(args[2]) ~= nil) then -- if is cmd or cmd and page number

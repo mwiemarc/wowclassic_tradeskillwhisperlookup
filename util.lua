@@ -97,15 +97,22 @@ end
 
 -- escpae chat link returns display string
 function TSWL.util.unescapeLink(str)
-    local res = tostring(str)
+    str = tostring(str)
 
-    res = gsub(res, '|c........', '') -- Remove color start.
-    res = gsub(res, '|r', '') -- Remove color end.
-    res = gsub(res, '|H.-|h(.-)|h', '%1') -- Remove links.
-    res = gsub(res, '|T.-|t', '') -- Remove textures.
-    res = gsub(res, '{.-}', '') -- Remove raid target icons.
-    res = string.gsub(res, '%[', '') -- remove opening bracket
-    res = string.gsub(res, '%]', '') -- remove closing bracked
+    str = gsub(str, '|c........', '') -- Remove color start.
+    str = gsub(str, '|r', '') -- Remove color end.
+    str = gsub(str, '|H.-|h(.-)|h', '%1') -- Remove links.
+    str = gsub(str, '|T.-|t', '') -- Remove textures.
+    str = gsub(str, '{.-}', '') -- Remove raid target icons.
 
-    return res
+    return str
+end
+
+-- escpae chat link returns display string
+function TSWL.util.linkToName(str)
+    str = TSWL.util.unescapeLink(str)
+    str = string.gsub(str, '%[', '') -- remove opening bracket
+    str = string.gsub(str, '%]', '') -- remove closing bracked
+
+    return str
 end

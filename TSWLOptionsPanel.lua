@@ -363,7 +363,7 @@ function TSWL.options.SetupPanel()
 
             for k, v in pairs(TSWL_CharacterConfig.professions[TSWLOptionsPanel.selectedProfession].data.tradeskills) do
                 table.insert(TSWL.options.autocompleteDataset.tradeskills, v.name)
-                table.insert(TSWL.options.autocompleteDataset.tradeskills, TSWL.util.unescapeLink(v.link))
+                table.insert(TSWL.options.autocompleteDataset.tradeskills, TSWL.util.linkToName(v.link))
 
                 for kk, vv in pairs(v.reagents) do
                     table.insert(TSWL.options.autocompleteDataset.reagents, vv.name)

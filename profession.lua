@@ -109,7 +109,7 @@ function TSWL.profession.TryUpdateProfessionData(isCrafting)
                 skill.link = GetTradeSkillItemLink(i) -- get itemlink
 
                 if skill.cd then
-                    skill.cd = skill.cd + GetTime()
+                    skill.cd = skill.cd + time()
                 end
 
                 if not skill.link then
@@ -135,8 +135,8 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
                 for ii, vv in ipairs(prof.data.tradeskills) do
                     if #skills < 16 then -- max one page of featured
                         if
-                            string.match(string.lower(vv.name), string.lower(v)) or string.lower(vv.name) == string.lower(v) or string.match(string.lower(TSWL.util.unescapeLink(vv.link)), string.lower(v)) or
-                                string.lower(TSWL.util.unescapeLink(vv.link)) == string.lower(v)
+                            string.match(string.lower(vv.name), string.lower(v)) or string.lower(vv.name) == string.lower(v) or string.match(string.lower(TSWL.util.linkToName(vv.link)), string.lower(v)) or
+                                string.lower(TSWL.util.linkToName(vv.link)) == string.lower(v)
                          then -- lookup tradeskill or item
                             table.insert(skills, vv)
                         end
@@ -162,7 +162,7 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
     end
 
     for i, s in ipairs(prof.data.tradeskills) do
-        if string.match(string.lower(s.name), query) or string.lower(s.name) == query or string.match(string.lower(TSWL.util.unescapeLink(s.link)), query) or string.lower(TSWL.util.unescapeLink(s.link)) == query then -- matching tradeskill or item
+        if string.match(string.lower(s.name), query) or string.lower(s.name) == query or string.match(string.lower(TSWL.util.linkToName(s.link)), query) or string.lower(TSWL.util.linkToName(s.link)) == query then -- matching tradeskill or item
             table.insert(skills, s)
         end
     end
