@@ -41,7 +41,7 @@ if LOCALE == 'deDE' then
     L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Antwort Hinweis: Antwortverzögerung'
 
     L['OPTIONS_TOOLTIP_AUTOCOMPLETE'] =
-        'Verfügbar für |cff00ffffFertigkeiten|r/|cff00ffffItems|r und |cff00ffffWerteschlüssel|r\n\nMit |cff00ff00Tab|r oder |cff00ff00Shift+Tab|r können Sie durch zum nächsten oder letzten Vorschlag wechseln\nMit |cff00ff00Strg+Tab|r oder |cff00ff00Enter|r können Sie den Vorschlag akzeptieren\nDurch |cff00ff00Strg|r können Sie die Autovervollständigung kurzzeitig aussetzten\n\n|cffffff00(Diese Funktion befindet sich noch in Entwicklung und könnte unerwartetes Verhalten zeigen)|r'
+        'Verfügbar für |cff00ffffFertigkeiten|r/|cff00ffffItems|r und |cff00ffffWerteschlüssel|r\n\nMit |cff00ff00Tab|r oder |cff00ff00Shift+Tab|r können Sie durch zum nächsten oder letzten Vorschlag wechseln\nMit |cff00ff00Enter|r oder |cff00ff00Strg+Tab|r können Sie den Vorschlag akzeptieren\nDurch |cff00ff00Alt|r können Sie die Autovervollständigung kurzzeitig aussetzten\n\n|cffffff00(Diese Funktion befindet sich noch in Entwicklung und könnte unerwartetes Verhalten zeigen)|r'
     L['OPTIONS_TOOLTIP_SPELLFIX'] =
         'Legen Sie Wörter fest welche durch andere bei der Suche ersetzt werden sollen.\nz.B.: |cff00ff00tränke=trank|r oder |cff00ff00elixiere=elixier|r oder |cff00ff00flasks=fläschchen|r\n\n|cffffff00(Trennen Sie mehrere Einträge durch ein Semikolon)|r'
     L['OPTIONS_TOOLTIP_FEATURED'] = 'Fertigkeiten/Items welche Angezeigt werden wenn der Flüsterbefehl ohne weitere Parameter Empfangen wurde.\n\n|cffffff00(Trennen Sie mehrere Einträge durch ein Semikolon)|r'

@@ -77,7 +77,7 @@ local function OnKeyUp(frame, key)
             local txt = c.frame:GetText()
             local cur = c.frame:GetCursorPosition()
             local start = FindLast(string.sub(txt, 1, cur), '%' .. c.delimiter) + 1
-            local stop = string.find(txt, c.delimiter, cur)
+            local stop = string.find(txt, c.delimiter, cur + 1)
             local match
 
             stop = stop and stop or string.len(txt)
@@ -94,7 +94,7 @@ local function OnKeyUp(frame, key)
                 else
                     match = MatchNextValue(search, fullSearch, c.values)
                 end
-            elseif not ctrl or (alt and ctrl) then -- try find value
+            elseif (not alt and not ctrl) or (alt and ctrl) then -- try find value
                 local search = string.sub(txt, start, cur)
 
                 match = MatchFirstValue(search, c.values)

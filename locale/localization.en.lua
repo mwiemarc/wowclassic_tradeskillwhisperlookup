@@ -40,7 +40,7 @@ if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as 
     L['OPTIONS_LABEL_RESPONSE_HINT_DELAY'] = 'Response hint: Response delay'
 
     L['OPTIONS_TOOLTIP_AUTOCOMPLETE'] =
-        'Available for |cff00ffffTradeskills|r/|cff00ffffItems|r and |cff00ffffValuekeys|r\n\nBy pressing |cff00ff00Tab|r or |cff00ff00Shift+Tab|r you can loop forward or backward through suggestions\nBy pressing |cff00ff00Ctrl+Tab|r or |cff00ff00Enter|r you can accept the suggestion\nHold |cff00ff00Ctrl|r to disable autocompletion temporary\n\n|cffffff00(This functions is in early development stage and can show some unexpected behaviors)|r'
+        'Available for |cff00ffffTradeskills|r/|cff00ffffItems|r and |cff00ffffValuekeys|r\n\nBy pressing |cff00ff00Tab|r or |cff00ff00Shift+Tab|r you can loop forward or backward through suggestions\nBy pressing |cff00ff00Enter|r or |cff00ff00Ctrl+Tab|r you can accept the suggestion\nHold |cff00ff00Alt|r to disable autocompletion temporary\n\n|cffffff00(This functions is in early development stage and can show some unexpected behaviors)|r'
     L['OPTIONS_TOOLTIP_SPELLFIX'] = 'Define words which will be replaced by another in request.\ne.g. |cff00ff00pots=pot|r or |cff00ff00flasks=flask|r or |cff00ff00flaks=flask|r\n\n|cffffff00(Split multiple entrys by semicolon)|r'
     L['OPTIONS_TOOLTIP_FEATURED'] = 'Define Tradeskills/Items which will be retured instead of the default tradeskill list when just the whisper command is recieved without parameters.\n\n|cffffff00(Split multiple entrys by semicolon)|r'
     L['OPTIONS_TOOLTIP_HIDE_REAGENTS'] = 'Define Reagents that should be hidden in response.\n\n|cffffff00(Split multiple entrys by semicolon)|r'
