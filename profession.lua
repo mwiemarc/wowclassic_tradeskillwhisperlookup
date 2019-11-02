@@ -120,16 +120,15 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
         if page or string.len(prof.config.featured) == 0 then -- page is set or no featured
             return prof.data.tradeskills
         else
-            local skills = {}
             local featured = TSWL.util.stringSplit(prof.config.featured, ';')
+            local skills = {}
 
             for i, v in ipairs(featured) do -- get featured in correct order
                 for ii, vv in ipairs(prof.data.tradeskills) do
-                    if #skills < 16 then -- max one page of featured
-                        if
-                            string.match(string.lower(vv.name), string.lower(v)) or string.lower(vv.name) == string.lower(v) or string.match(string.lower(TSWL.util.linkToName(vv.link)), string.lower(v)) or
-                                string.lower(TSWL.util.linkToName(vv.link)) == string.lower(v)
-                         then -- lookup tradeskill or item
+                    if #skills < 16 and #skills < #featured then -- max one page of featured
+                        local lname = string.lower(TSWL.util.linkToName(vv.link))
+
+                        if string.match(string.lower(vv.name), string.lower(v)) or string.lower(vv.name) == string.lower(v) or string.match(lname, string.lower(v)) or lname == string.lower(v) then -- lookup tradeskill or item
                             table.insert(skills, vv)
                         end
                     end
@@ -143,7 +142,7 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
     query = string.lower(query) -- ignore case
 
     local skills = {}
-    local spellfix = TSWL.util.stringSplit(prof.config.spellfix, ';') -- fix misspells or redirect query
+    local spellfix = TSWL.util.stringSplit(prof.config.spellfix, ';') -- fix misspells/redirect query
 
     for i, v in ipairs(spellfix) do
         local sfSplit = TSWL.util.stringSplit(v, '=') -- spellfix is formated "misspell=spellfix"
@@ -154,7 +153,9 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
     end
 
     for i, s in ipairs(prof.data.tradeskills) do
-        if string.match(string.lower(s.name), query) or string.lower(s.name) == query or string.match(string.lower(TSWL.util.linkToName(s.link)), query) or string.lower(TSWL.util.linkToName(s.link)) == query then -- matching tradeskill or item
+        local lname = string.lower(TSWL.util.linkToName(s.link))
+
+        if string.match(string.lower(s.name), query) or string.lower(s.name) == query or string.match(lname, query) or lname == query then -- matching tradeskill or item
             table.insert(skills, s)
         end
     end

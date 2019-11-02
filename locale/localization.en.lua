@@ -13,7 +13,7 @@ if LOCALE == 'enUS' or LOCALE == 'enGB' or TSWL.L == nil then -- use english as 
     L['CONFIG_DEFAULT_RESPONSE_NO_RESULTS'] = 'No results for your request'
     L['CONFIG_DEFAULT_RESPONSE_HEADER'] = 'Results {{first_index}}-{{last_index}} (of {{num_results}}) (Page {{page}}/{{num_pages}}) {rt3} = Reagents available'
     L['CONFIG_DEFAULT_RESPONSE_FOOTER'] = ''
-    L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'] = "Hay! This is a selection of my {{num_skills}} Skills. If you got any question don't be afraid to ask ;)"
+    L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'] = "Hay! This is a selection of my {{num_tradeskills}} Skills. If you got any question don't be afraid to ask ;)"
     L['CONFIG_DEFAULT_RESPONSE_FEATURED_FOOTER'] = "Not your's? Send {{cmd}} 1 to lookup all of my skills or {{cmd}} SEARCHTERM to search my skills"
     L['CONFIG_DEFAULT_RESPONSE_HINT_DELAY'] = 'It could take a moment to recieve all messages'
     L['CONFIG_DEFAULT_RESPONSE_HINT_PAGING'] = 'Next page: {{cmd_query}} {{next_page}}'

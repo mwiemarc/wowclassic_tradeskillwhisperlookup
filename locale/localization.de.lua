@@ -14,7 +14,7 @@ if LOCALE == 'deDE' then
     L['CONFIG_DEFAULT_RESPONSE_NO_RESULTS'] = 'Ihre Suche lieferte keine Ergebnisse'
     L['CONFIG_DEFAULT_RESPONSE_HEADER'] = 'Ergebnisse {{first_index}}-{{last_index}} (von {{num_results}}) (Seite {{page}}/{{num_pages}}) {rt3} = Mats vorhanden'
     L['CONFIG_DEFAULT_RESPONSE_FOOTER'] = ''
-    L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'] = 'Hallo! Dies ist eine kleine Auswahl meiner {{num_skills}} Fertigkeiten. Für Fragen stehe ich gerne zur verfügung.'
+    L['CONFIG_DEFAULT_RESPONSE_FEATURED_HEADER'] = 'Hallo! Dies ist eine kleine Auswahl meiner {{num_tradeskills}} Fertigkeiten. Für Fragen stehe ich gerne zur verfügung.'
     L['CONFIG_DEFAULT_RESPONSE_FEATURED_FOOTER'] = 'Nichts dabei? Mit {{cmd}} 1 können Sie meine Fertigkeiten durchschauen oder mit {{cmd}} SUCHBEGRIFF direkt nach Items suchen'
     L['CONFIG_DEFAULT_RESPONSE_HINT_DELAY'] = 'Es kann einen Moment dauern bis Sie alle Nachrichten erhalten haben'
     L['CONFIG_DEFAULT_RESPONSE_HINT_PAGING'] = 'Nächste Seite: {{request_cmd}} {{next_page}}'
