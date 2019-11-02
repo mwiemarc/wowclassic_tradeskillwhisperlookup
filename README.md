@@ -3,12 +3,9 @@
 
 &nbsp;
 
-&nbsp;
+* [Issue reports](https://github.com/mwiemarc/wowclassic_tradeskillwhisperlookup/issues)
+* [Curseforge page](https://www.curseforge.com/wow/addons/tradeskillwhisperlookup)
 
-[Issue reports](https://github.com/mwiemarc/wowclassic_tradeskillwhisperlookup/issues)
-[Curseforge page](https://www.curseforge.com/wow/addons/tradeskillwhisperlookup)
-
-&nbsp;
 &nbsp;
 
 ## screenshots
