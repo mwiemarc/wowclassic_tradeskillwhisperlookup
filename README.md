@@ -1,8 +1,10 @@
-# wowclassic_tradeskillwhisperlookup
-
-* Let other players lookup or search your profession tradeskills by whisper commands
+# **TradeSkillWhisperLookup** *(for WoW Classic)*
+### **Let other players lookup or search your profession tradeskills by whisper commands**
 
 &nbsp;
+
+&nbsp;
+
 [https://www.curseforge.com/wow/addons/tradeskillwhisperlookup](https://www.curseforge.com/wow/addons/tradeskillwhisperlookup)
 [https://github.com/mwiemarc/wowclassic_tradeskillwhisperlookup](https://github.com/mwiemarc/wowclassic_tradeskillwhisperlookup)
 
