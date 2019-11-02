@@ -46,6 +46,8 @@ local function BuildWhisperResponse(prof, query, page, skills)
             table.insert(resMsgs, prof.config.responseHintDelay)
         end
 
+        local hideReagents = TSWL.util.stringSplit(prof.config.hideReagents, ';') -- get ignore reagnts as array
+
         -- add tradeskill in range
         for i, s in ipairs(skills) do
             if i > firstIndex and i <= lastIndex then -- paging offset
@@ -62,13 +64,14 @@ local function BuildWhisperResponse(prof, query, page, skills)
                 skillStr = string.gsub(skillStr, '%{{name}}', s.name) -- add tradeskill name
                 skillStr = string.gsub(skillStr, '%{{item}}', s.link) -- add item link
 
+                local visReagents = TSWL.profession.GetVisibleReagents(s.reagents, hideReagents)
                 local reagentsStr = ''
 
                 -- add reagents
-                for j, v in ipairs(s.reagents) do -- add reagents to string
+                for j, v in ipairs(visReagents) do -- add reagents to string
                     reagentsStr = reagentsStr .. (v.count .. 'x' .. v.name) -- build reagents str
 
-                    if j < #s.reagents then -- is not last
+                    if j < #visReagents then -- is not last
                         reagentsStr = reagentsStr .. '/'
                     end
                 end
@@ -228,6 +231,20 @@ local function MigrateSavedVariables()
 
         -- show user messages and popup
         StaticPopup_Show('TSWL_POPUP_CONFIG_UPDATED')
+    end
+
+    if TSWL_CharacterConfig then -- move hidden reagents to reagents
+        for k, v in pairs(TSWL_CharacterConfig.professions) do
+            for i, vv in ipairs(v.data.tradeskills) do
+                if vv.hiddenReagents then
+                    for ii, vvv in ipairs(vv.hiddenReagents) do
+                        table.insert(TSWL_CharacterConfig.professions[k].data.tradeskills[i].reagents, vvv)
+                    end
+
+                    TSWL_CharacterConfig.professions[k].data.tradeskills[i].hiddenReagents = nil
+                end
+            end
+        end
     end
 end
 

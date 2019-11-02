@@ -1,7 +1,8 @@
 local TSWL_AddonName, TSWL = ...
 
 TSWL.options = {}
-TSWL.options.autocompleteDataset = {
+
+local autocompleteDataset = {
     valueKeysHeader = {'{{first_index}}', '{{last_index}}', '{{num_results}}', '{{num_tradeskills}}', '{{page}}', '{{num_pages}}', '{{request_cmd}}', '{{cmd}}', '{{skill_cur}}', '{{skill_max}}', '{{profession}}'},
     valueKeysSkill = {'{{index}}', '{{name}}', '{{item}}', '{{reagents}}', '{{num_craftable}}', '{{cd}}'},
     valueKeysPaging = {'{{page}}', '{{next_page}}', '{{num_pages}}', '{{request_cmd}}'},
@@ -9,7 +10,7 @@ TSWL.options.autocompleteDataset = {
     tradeskills = {}
 }
 
-TSWL.options.professionConfigWidgets = {
+local professionConfigWidgets = {
     {
         name = 'cmd',
         label = TSWL.L['OPTIONS_LABEL_COMMAND']
@@ -247,6 +248,10 @@ function TSWL.options.SetupPanel()
             local settingsField = widget.name
             local value = settingsTable[settingsField]
 
+            if widget.autocomplete then
+                InlineAutocompleteLib:SetEditBoxValues(widgetFrame, autocompleteDataset[widget.autocomplete.datasetKey]) -- update autocomplete values
+            end
+
             widgetFrame:SetText(value or '')
             widgetFrame:SetCursorPosition(0) -- Fix to scroll the text field to the left
             widgetFrame:ClearFocus()
@@ -272,84 +277,50 @@ function TSWL.options.SetupPanel()
         local widget = self.widget
         local value = self:GetText()
 
-        widgetValueChanged(widget, self:GetText()) -- save to config table
+        widgetValueChanged(widget, value)
     end
 
-    local function widgetOnKeyUp(self, key) -- autocomplete
+    local function widgetOnKeyUp(self, key)
         local widget = self.widget
         local value = self:GetText()
 
-        --print(key)
-
-        if TSWL_CharacterConfig.enableAutocomplete and widget.autocomplete and TSWL.options.autocompleteDataset[widget.autocomplete.datasetKey] then -- accept suggensting
-            if key == 'TAB' or key == 'ENTER' or key == 'RETURN' then -- complete suggestion
-                self:SetCursorPosition(string.len(value) + 1)
-                self:HighlightText(0, 0)
-            elseif not IsControlKeyDown() or (IsLeftControlKeyDown() and IsRightAltKeyDown()) then -- bypass on ctrl (only, prevents autocomplete on copy/past/select...) down
-                if (string.len(key) == 1 and key:match('%w')) or key == 'SPACE' then -- do autocomplete only if char, number or space was pressed
-                    local ci = self:GetCursorPosition() -- save cursor pos
-                    local inputStr = string.sub(value, 1, ci) -- remove selection from query
-
-                    if string.sub(inputStr, -1) ~= widget.autocomplete.inputDelimiter then -- is valid cursor position and last char is not demiter
-                        local splitArr = TSWL.util.stringSplit(inputStr, widget.autocomplete.inputDelimiter) -- get all substrings
-                        local str = #splitArr > 0 and splitArr[#splitArr] and string.lower(splitArr[#splitArr]) or '' -- find last
-
-                        if string.len(TSWL.util.stringTrim(str)) > 0 then -- has string to search
-                            for i, v in ipairs(TSWL.options.autocompleteDataset[widget.autocomplete.datasetKey]) do
-                                if str == string.sub(string.lower(v), 1, string.len(str)) then -- find first match
-                                    self:Insert(string.sub(v, string.len(str) + 1)) -- insert suggestion
-                                    self:HighlightText(ci, ci + (string.len(v) - string.len(str))) -- select suggested inset
-                                    self:SetCursorPosition(ci) -- restore cursor pos
-                                    return
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-
-            widgetValueChanged(widget, self:GetText()) -- save to config table
-        end
+        widgetValueChanged(widget, value)
     end
 
-    for i, widget in ipairs(TSWL.options.professionConfigWidgets) do
-        if widget.name then -- options widget
-            -- widget label
-            local label = professionPanel:CreateFontString(professionPanel:GetName() .. 'Label' .. widget.name, 'ARTWORK', 'GameFontNormal')
-            label:SetText(widget.label)
-            label:SetWidth(labelWidth)
-            label:SetJustifyH('LEFT')
+    for i, widget in ipairs(professionConfigWidgets) do
+        -- widget label
+        local label = professionPanel:CreateFontString(professionPanel:GetName() .. 'Label' .. widget.name, 'ARTWORK', 'GameFontNormal')
+        label:SetText(widget.label)
+        label:SetWidth(labelWidth)
+        label:SetJustifyH('LEFT')
 
-            appendWidget(professionPanel, label, rowPadding) -- append label
+        appendWidget(professionPanel, label, rowPadding) -- append label
 
-            -- create option editbox
-            local widgetFrame = CreateFrame('EditBox', professionPanel:GetName() .. 'Widget' .. widget.name, professionPanel, 'InputBoxTemplate')
-            widgetFrame:SetPoint('LEFT', label, 'RIGHT', columnPadding, 0)
-            widgetFrame:SetWidth(widgetWidth - 6)
-            widgetFrame:SetHeight(20)
-            widgetFrame:SetAutoFocus(false)
+        -- create option editbox
+        local widgetFrame = CreateFrame('EditBox', professionPanel:GetName() .. 'Widget' .. widget.name, professionPanel, 'InputBoxTemplate')
+        widgetFrame:SetPoint('LEFT', label, 'RIGHT', columnPadding, 0)
+        widgetFrame:SetWidth(widgetWidth - 6)
+        widgetFrame:SetHeight(20)
+        widgetFrame:SetAutoFocus(false)
 
-            widgetFrame:EnableKeyboard(true)
-            widgetFrame:SetScript('OnKeyUp', widgetOnKeyUp)
-            widgetFrame:SetScript('OnTextChanged', widgetOnTextChanged)
+        widgetFrame:EnableKeyboard(true)
+        widgetFrame:SetScript('OnKeyUp', widgetOnKeyUp)
+        widgetFrame:SetScript('OnTextChanged', widgetOnTextChanged)
 
-            if widgetFrame then
-                if widget.tooltip then
-                    widgetFrame.tooltip = widget.tooltip
-                    widgetFrame:SetScript('OnEnter', TSWLOptionsPanel_ShowTooltip)
-                    widgetFrame:SetScript('OnLeave', TSWLOptionsPanel_HideTooltip)
-                end
-                -- Establish cross-references
-                widgetFrame.widget = widget
-                widget.widgetFrame = widgetFrame
+        if widget.autocomplete then
+            InlineAutocompleteLib:RegisterEditBox(widgetFrame, widget.autocomplete.inputDelimiter)
+        end
+
+        if widgetFrame then
+            if widget.tooltip then
+                widgetFrame.tooltip = widget.tooltip
+                widgetFrame:SetScript('OnEnter', TSWLOptionsPanel_ShowTooltip)
+                widgetFrame:SetScript('OnLeave', TSWLOptionsPanel_HideTooltip)
             end
-        else -- text hint only
-            local hint = professionPanel:CreateFontString(professionPanel:GetName() .. 'Hint' .. i, 'ARTWORK', 'GameFontNormal')
-            hint:SetText(widget.label)
-            hint:SetWidth(labelWidth + widgetWidth + columnPadding)
-            hint:SetJustifyH('LEFT')
 
-            appendWidget(professionPanel, hint, rowPadding)
+            -- Establish cross-references
+            widgetFrame.widget = widget
+            widget.widgetFrame = widgetFrame
         end
     end
 
@@ -358,26 +329,38 @@ function TSWL.options.SetupPanel()
 
         if TSWLOptionsPanel.selectedProfession then
             -- update autocomplete values
-            TSWL.options.autocompleteDataset.reagents = {}
-            TSWL.options.autocompleteDataset.tradeskills = {}
+            autocompleteDataset.reagents = {}
+            autocompleteDataset.tradeskills = {}
+
+            local addedTradeSkills = {}
+            local addedReagents = {}
 
             for k, v in pairs(TSWL_CharacterConfig.professions[TSWLOptionsPanel.selectedProfession].data.tradeskills) do
-                table.insert(TSWL.options.autocompleteDataset.tradeskills, v.name)
-                table.insert(TSWL.options.autocompleteDataset.tradeskills, TSWL.util.linkToName(v.link))
+                if not addedTradeSkills[v.name] then
+                    table.insert(autocompleteDataset.tradeskills, v.name)
 
-                for kk, vv in pairs(v.reagents) do
-                    table.insert(TSWL.options.autocompleteDataset.reagents, vv.name)
+                    addedTradeSkills[v.name] = true
                 end
 
-                for kk, vv in pairs(v.hiddenReagents) do
-                    table.insert(TSWL.options.autocompleteDataset.reagents, vv.name)
+                if not addedTradeSkills[TSWL.util.linkToName(v.link)] then
+                    table.insert(autocompleteDataset.tradeskills, TSWL.util.linkToName(v.link))
+
+                    addedTradeSkills[TSWL.util.linkToName(v.link)] = true
+                end
+
+                for kk, vv in pairs(v.reagents) do
+                    if not addedReagents[vv.name] then
+                        table.insert(autocompleteDataset.reagents, vv.name)
+
+                        addedReagents[vv.name] = true
+                    end
                 end
             end
 
             -- update frames
             professionPanel:Show()
 
-            for i, widget in ipairs(TSWL.options.professionConfigWidgets) do
+            for i, widget in ipairs(professionConfigWidgets) do
                 refreshWidget(widget)
             end
         else

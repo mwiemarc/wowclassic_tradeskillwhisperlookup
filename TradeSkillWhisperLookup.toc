@@ -2,10 +2,11 @@
 ## Title: TradeSkill|cffff7effWhisper|rLookup
 ## Notes: Let other players lookup or search your profession tradeskills by whisper commands
 ## Author: mwiemarc aka Maxhealth-Venoxis
-## Version: 0.2.3-beta
+## Version: 0.2.5-beta
 ## SavedVariablesPerCharacter: TSWL_CharacterConfig, TSWL_Professions
 
 libs\ChatThrottleLib\ChatThrottleLib.xml
+libs\InlineAutocompleteLib\InlineAutocompleteLib.lua
 locale\localization.de.lua
 locale\localization.en.lua
 util.lua

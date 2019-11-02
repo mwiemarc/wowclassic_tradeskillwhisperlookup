@@ -70,8 +70,6 @@ function TSWL.profession.TryUpdateProfessionData(isCrafting)
         TSWL_CharacterConfig.professions[profName].data.skillMax = skillMax
         TSWL_CharacterConfig.professions[profName].data.tradeskills = {} -- reinit saved skills
 
-        local hideReagents = TSWL.util.stringSplit(TSWL_CharacterConfig.professions[profName].config.hideReagents, ';') -- get ignore reagnts as array
-
         for i = 1, GetNumTradeSkills() do
             local sname, kind, num = GetTradeSkillInfo(i)
             local lname = string.lower(sname)
@@ -86,22 +84,16 @@ function TSWL.profession.TryUpdateProfessionData(isCrafting)
                 -- get reagents
                 for j = 1, GetTradeSkillNumReagents(i) do
                     local reagentName, _, reagentCount, playerReagentCount = GetTradeSkillReagentInfo(i, j)
-                    local reagent = {
-                        name = reagentName,
-                        count = reagentCount
-                    }
 
                     -- save reagent
                     if reagentName then
-                        if #hideReagents > 0 then -- check for ignore reagent
-                            if TSWL.util.stringMatchArray(reagentName, hideReagents) then
-                                table.insert(skill.hiddenReagents, reagent)
-                            else
-                                table.insert(skill.reagents, reagent)
-                            end
-                        else
-                            table.insert(skill.reagents, reagent)
-                        end
+                        table.insert(
+                            skill.reagents,
+                            {
+                                name = reagentName,
+                                count = reagentCount
+                            }
+                        )
                     end
                 end
 
@@ -168,4 +160,16 @@ function TSWL.profession.GetTradeSkills(prof, query, page)
     end
 
     return skills
+end
+
+function TSWL.profession.GetVisibleReagents(reagents, hiddenReagents)
+    local arr = {}
+
+    for i, v in ipairs(reagents) do
+        if not TSWL.util.stringMatchArray(v.name, hiddenReagents) then
+            table.insert(arr, v)
+        end
+    end
+
+    return arr
 end
