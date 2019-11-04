@@ -276,27 +276,27 @@ end
 
 -- core event handler
 local function MainEventHandler(frame, event, ...)
-    if event == 'TRADE_SKILL_UPDATE' then
+    if event == 'TRADE_SKILL_UPDATE' then -- profession update
         if TSWL.state.addProfession then
             TSWL.profession.TryAddProfession()
         else
             TSWL.profession.TryUpdateProfessionData()
         end
-    elseif event == 'CRAFT_UPDATE' then
+    elseif event == 'CRAFT_UPDATE' then -- crafting profession update (enchanting)
         if TSWL.state.addProfession then
             TSWL.profession.TryAddProfession(true)
         else
             TSWL.profession.TryUpdateProfessionData(true)
         end
-    elseif event == 'CHAT_MSG_WHISPER' then
+    elseif event == 'CHAT_MSG_WHISPER' then -- recieved whisper message
         local msg, name = ...
 
         ProcessWhisperMessage(name, msg)
-    elseif event == 'PLAYER_LOGIN' then
+    elseif event == 'PLAYER_LOGIN' then -- on player logon world
         for k, v in pairs(TSWL_CharacterConfig.professions) do -- profession loaded message
             print('|cffffff00TS|r|cffff7effW|r|cffffff00L loaded|r |cff00ff00' .. k .. '|r |cffffff00(|r|cffff7eff' .. v.config.cmd .. '|r|cffffff00)|r')
         end
-    elseif event == 'ADDON_LOADED' then
+    elseif event == 'ADDON_LOADED' then -- on init
         local name = ...
 
         if name == TSWL_AddonName then
@@ -322,6 +322,7 @@ function SlashCmdList.TSWL_SLASHCOMMAND(msg, editBox)
         ProcessWhisperMessage(nil, msg) -- self test print
     else
         InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
+        InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
     end
 end
 
@@ -330,6 +331,7 @@ StaticPopupDialogs['TSWL_POPUP_CONFIG_UPDATED'] = {
     button1 = 'OK',
     OnAccept = function()
         StaticPopup_Hide('TSWL_POPUP_CONFIG_UPDATED')
+        InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
         InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
     end,
     timeout = 0,

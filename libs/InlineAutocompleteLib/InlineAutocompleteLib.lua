@@ -1,16 +1,46 @@
-InlineAutocompleteLib = {}
-InlineAutocompleteLib.version = '0.0.2-alpha'
+local IACLIB_VERSION = '0.0.3-alpha'
 
-local editBoxes = {}
+-- version check
+if _G['IACLIB_VERSION'] then
+    local digs, _digs = {}, {}
 
-local function FindLast(haystack, needle)
-    local i = haystack:match('.*' .. needle .. '()')
-
-    if i then
-        return i - 1
+    -- get digs vom version string
+    for d in IACLIB_VERSION:gmatch('[0-9]+') do
+        table.insert(digs, tonumber(d))
     end
 
-    return 0
+    for d in _G['IACLIB_VERSION']:gmatch('[0-9]+') do
+        table.insert(_digs, tonumber(d))
+    end
+
+    -- compare check version numbers
+    if _digs[1] > digs[1] or _digs[2] > digs[2] or _digs[3] > digs[3] then
+        return -- greater version number found, do not load
+    end
+
+    print('|cffff0000InlineAutocompleteLib: A older version is found, this could cause some issues|r')
+    print('|cffff0000InlineAutocompleteLib: Please check your addons for updates or replace libraries in your addons with at least |r|cff00ff00v' .. IACLIB_VERSION .. '|r')
+end
+
+_G['IACLIB_VERSION'] = IACLIB_VERSION -- set loaded version
+
+InlineAutocompleteLib = {} -- create and init global object
+
+-- todo: make bindings local for editboxes or leave them global?
+InlineAutocompleteLib.bindings = {}
+
+-- default bindings
+InlineAutocompleteLib.bindings.autocomplete = 'TAB'
+InlineAutocompleteLib.bindings.nextSuggestion = 'SHIFT+TAB'
+InlineAutocompleteLib.bindings.prevSuggestion = 'CTRL+TAB'
+InlineAutocompleteLib.bindings.disable = ''
+
+local editBoxes = {} -- registered frames are saved here with specific values
+
+local function FindLastIndex(haystack, needle) -- get index of last matching char in string
+    local i = haystack:match('.*' .. needle .. '()')
+
+    return i and (i - 1) or 0
 end
 
 local function MatchFirstValue(value, values)
@@ -68,59 +98,80 @@ local function MatchPrevValue(value, lastMatch, values)
 end
 
 local function OnKeyUp(frame, key)
-    local alt = IsAltKeyDown()
-    local ctrl = IsControlKeyDown()
-    local c = editBoxes[frame:GetName()]
+    local box = editBoxes[frame:GetName()]
 
-    if c and (string.len(key) == 1 or key == 'TAB' or key == 'ENTER' or (alt and ctrl)) then
-        if #c.values > 0 then
-            local txt = c.frame:GetText()
-            local cur = c.frame:GetCursorPosition()
-            local start = FindLast(string.sub(txt, 1, cur), '%' .. c.delimiter) + 1
-            local stop = string.find(txt, c.delimiter, cur + 1)
-            local match
+    if InlineAutocompleteLib.enabled then
+        if box and #box.values > 0 then -- has values
+            local shift = IsShiftKeyDown()
+            local ctrl = IsControlKeyDown()
+            local alt = IsAltKeyDown()
+            local altgr = (ctrl and alt) -- used for some special chars
 
-            stop = stop and stop or string.len(txt)
+            -- check for disabled key down
+            if not ((InlineAutocompleteLib.bindings.disable == 'SHIFT' and shift) or (InlineAutocompleteLib.bindings.disable == 'CTRL' and (ctrl and not altgr)) or (InlineAutocompleteLib.bindings.disable == 'ALT' and (alt and not altgr))) then
+                local mkey = key
 
-            if key == 'ENTER' or (key == 'TAB' and ctrl) then -- complete
-                c.frame:HighlightText(0, 0)
-                c.frame:SetCursorPosition(stop)
-            elseif key == 'TAB' then -- loop through values
-                local search = string.sub(txt, start, cur)
-                local fullSearch = string.sub(txt, start, stop)
+                mkey = shift and 'SHIFT+' .. mkey or mkey
+                mkey = ctrl and 'CTRL+' .. mkey or mkey
+                mkey = alt and 'ALT+' .. mkey or mkey
 
-                if IsShiftKeyDown() then -- shift to match prev
-                    match = MatchPrevValue(search, fullSearch, c.values)
-                else
-                    match = MatchNextValue(search, fullSearch, c.values)
+                print(mkey, InlineAutocompleteLib.bindings.prevSuggestion)
+
+                if string.len(key) == 1 or mkey == InlineAutocompleteLib.bindings.autocomplete or mkey == InlineAutocompleteLib.bindings.nextSuggestion or mkey == InlineAutocompleteLib.bindings.prevSuggestion then
+                    local txt = box.frame:GetText()
+                    local cur = box.frame:GetCursorPosition()
+                    local start = FindLastIndex(string.sub(txt, 1, cur), '%' .. box.delimiter) + 1 -- find last delimiter before cursor
+                    local stop = string.find(txt, box.delimiter, cur + 1) or string.len(txt) -- find first delimiter behind cursor
+
+                    local search = string.sub(txt, start, cur)
+                    local fullSearch = string.sub(txt, start, stop)
+                    local match = nil
+
+                    if mkey == InlineAutocompleteLib.bindings.autocomplete then
+                        box.frame:HighlightText(0, 0) -- unhighlight
+                        box.frame:SetCursorPosition(stop) -- set cursor to delimiter pos
+                    elseif mkey == InlineAutocompleteLib.bindings.nextSuggestion then
+                        match = MatchNextValue(search, fullSearch, box.values)
+                    elseif mkey == InlineAutocompleteLib.bindings.prevSuggestion then
+                        match = MatchPrevValue(search, fullSearch, box.values)
+                    elseif not (ctrl and not altgr) then -- prevent autocomplete on copy, paste...
+                        match = MatchFirstValue(search, box.values)
+                    end
+
+                    if match then -- has matching value
+                        local insert = string.sub(match, -(string.len(match) - (cur - start) - 1)) -- only insert whats not already typed in
+
+                        box.frame:Insert(insert)
+                        box.frame:HighlightText(cur, cur + (string.len(insert))) -- hightlight insert
+                        box.frame:SetCursorPosition(cur) -- return cursor to last position
+                    end
                 end
-            elseif (not alt and not ctrl) or (alt and ctrl) then -- try find value
-                local search = string.sub(txt, start, cur)
-
-                match = MatchFirstValue(search, c.values)
-            end
-
-            if match then
-                local insert = string.sub(match, -(string.len(match) - (cur - start) - 1))
-
-                c.frame:Insert(insert)
-                c.frame:HighlightText(cur, cur + (string.len(insert)))
-                c.frame:SetCursorPosition(cur)
-            end
-
-            if c.script and type(c.script) == 'function' then -- call orginal event listener
-                c.script(frame, key)
             end
         end
     end
+
+    -- call orginal event listener function
+    if box and type(box.onKeyUp) == 'function' then
+        box.onKeyUp(frame, key)
+    end
+end
+
+-- all uppercase: [modifier+] key, [modifier+] key, [modifier+] key, modifier
+function InlineAutocompleteLib:SetBindings(autocompleteKey, nextSuggestionKey, prevSuggestionKey, disableKey)
+    InlineAutocompleteLib.bindings = {
+        autocomplete = autocompleteKey,
+        nextSuggestion = nextSuggestionKey,
+        prevSuggestion = prevSuggestionKey,
+        disable = disableKey
+    }
 end
 
 function InlineAutocompleteLib:RegisterEditBox(editBoxFrame, inputDelimiter)
     editBoxes[editBoxFrame:GetName()] = {
         frame = editBoxFrame,
         values = {},
-        delimiter = inputDelimiter,
-        script = editBoxFrame:GetScript('OnKeyUp')
+        delimiter = inputDelimiter or ' ', -- space is default delimiter
+        onKeyUp = editBoxFrame:GetScript('OnKeyUp')
     }
 
     editBoxFrame:EnableKeyboard(true)
@@ -129,7 +180,7 @@ end
 
 function InlineAutocompleteLib:UnregisterEditBox(editBoxFrame)
     if editBoxes[editBoxFrame:GetName()] then
-        editBoxFrame:SetScript('OnKeyUp', editBoxes[editBoxFrame:GetName()].script) -- revert orginal event listener
+        editBoxFrame:SetScript('OnKeyUp', editBoxes[editBoxFrame:GetName()].onKeyUp) -- revert orginal event listener or set to nil
 
         editBoxes[editBoxFrame:GetName()] = nil
     end
@@ -140,3 +191,5 @@ function InlineAutocompleteLib:SetEditBoxValues(frame, values)
         editBoxes[frame:GetName()].values = values
     end
 end
+
+InlineAutocompleteLib.enabled = true

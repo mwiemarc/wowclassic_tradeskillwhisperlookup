@@ -10,6 +10,7 @@ local autocompleteDataset = {
     tradeskills = {}
 }
 
+-- options panel is heavily inspired by RingMenu options panel
 local professionConfigWidgets = {
     {
         name = 'cmd',
@@ -47,8 +48,7 @@ local professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_HEADER'],
         tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
-            datasetKey = 'valueKeysHeader',
-            inputDelimiter = ' '
+            datasetKey = 'valueKeysHeader'
         }
     },
     {
@@ -56,8 +56,7 @@ local professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FOOTER'],
         tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
-            datasetKey = 'valueKeysHeader',
-            inputDelimiter = ' '
+            datasetKey = 'valueKeysHeader'
         }
     },
     {
@@ -65,8 +64,7 @@ local professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FEATURED_HEADER'],
         tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
-            datasetKey = 'valueKeysHeader',
-            inputDelimiter = ' '
+            datasetKey = 'valueKeysHeader'
         }
     },
     {
@@ -74,8 +72,7 @@ local professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_FEATURED_FOOTER'],
         tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HEADER'],
         autocomplete = {
-            datasetKey = 'valueKeysHeader',
-            inputDelimiter = ' '
+            datasetKey = 'valueKeysHeader'
         }
     },
     {
@@ -83,8 +80,7 @@ local professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_SKILL'],
         tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_SKILL'],
         autocomplete = {
-            datasetKey = 'valueKeysSkill',
-            inputDelimiter = ' '
+            datasetKey = 'valueKeysSkill'
         }
     },
     {
@@ -92,8 +88,7 @@ local professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_SKILL_CRAFTABLE'],
         tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_SKILL'],
         autocomplete = {
-            datasetKey = 'valueKeysSkill',
-            inputDelimiter = ' '
+            datasetKey = 'valueKeysSkill'
         }
     },
     {
@@ -101,8 +96,7 @@ local professionConfigWidgets = {
         label = TSWL.L['OPTIONS_LABEL_RESPONSE_HINT_PAGING'],
         tooltip = TSWL.L['OPTIONS_TOOLTIP_RESPONSE_HINT_PAGING'],
         autocomplete = {
-            datasetKey = 'valueKeysPaging',
-            inputDelimiter = ' '
+            datasetKey = 'valueKeysPaging'
         }
     },
     {
@@ -127,7 +121,10 @@ function TSWLOptionsPanel_HideTooltip()
 end
 
 function TSWLOptionsPanel_SetAutocomplete(self)
-    TSWL_CharacterConfig.enableAutocomplete = _G['TSWLOptionsPanelCheckButtonAutocomplete']:GetChecked()
+    local enabled = _G['TSWLOptionsPanelCheckButtonAutocomplete']:GetChecked()
+
+    TSWL_CharacterConfig.enableAutocomplete = enabled
+    InlineAutocompleteLib.enabled = enabled
 end
 
 function TSWLOptionsPanel_ClickRemoveProfession()
@@ -188,6 +185,7 @@ function TSWL.options.AddProfessionCallback(profName, err)
     StaticPopup_Hide('TSWL_POPUP_ADD_PROFESSION')
 
     InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
+    InterfaceOptionsFrame_OpenToCategory('TradeSkillWhisperLookup')
 end
 
 function TSWL.options.SetupPanel()
@@ -198,7 +196,7 @@ function TSWL.options.SetupPanel()
     panel.selectedProfession = nil
     professionPanel:Hide()
 
-    -- Setup the drop down menu
+    -- setup the drop down menu
     function professionDropdown.Clicked(self, profName, arg2, checked)
         TSWLOptionsPanel.selectedProfession = profName
         professionPanel.refresh()
@@ -222,7 +220,7 @@ function TSWL.options.SetupPanel()
     UIDropDownMenu_JustifyText(professionDropdown, 'LEFT')
     UIDropDownMenu_SetText(professionDropdown, TSWLOptionsPanel.selectedProfession)
 
-    -- Setup the per-profession configuration panel
+    -- setup the per-profession configuration panel
     local function appendWidget(parent, child, rowPadding)
         child:SetParent(parent)
 
@@ -240,6 +238,7 @@ function TSWL.options.SetupPanel()
     local columnPadding = 6
     local rowPadding = 24
 
+    -- update widget content
     local function refreshWidget(widget)
         local widgetFrame = widget.widgetFrame
 
@@ -253,19 +252,19 @@ function TSWL.options.SetupPanel()
             end
 
             widgetFrame:SetText(value or '')
-            widgetFrame:SetCursorPosition(0) -- Fix to scroll the text field to the left
+            widgetFrame:SetCursorPosition(0) -- fix to scroll the text field to the left
             widgetFrame:ClearFocus()
         end
     end
 
-    -- This is the method that actually updates the settings field in the RingMenu_ringConfig table
+    -- widget event listeners
     local function widgetValueChanged(widget, value)
         local settingsTable = TSWL_CharacterConfig.professions[TSWLOptionsPanel.selectedProfession].config
         local settingsField = widget.name
 
         settingsTable[settingsField] = value
 
-        -- Some config panel changes that should take immediate effect
+        -- some config panel changes that should take immediate effect
         UIDropDownMenu_SetText(professionDropdown, TSWLOptionsPanel.selectedProfession)
     end
 
@@ -277,16 +276,10 @@ function TSWL.options.SetupPanel()
         local widget = self.widget
         local value = self:GetText()
 
-        widgetValueChanged(widget, value)
+        widgetValueChanged(widget, value) -- save value
     end
 
-    local function widgetOnKeyUp(self, key)
-        local widget = self.widget
-        local value = self:GetText()
-
-        widgetValueChanged(widget, value)
-    end
-
+    -- create widget frames
     for i, widget in ipairs(professionConfigWidgets) do
         -- widget label
         local label = professionPanel:CreateFontString(professionPanel:GetName() .. 'Label' .. widget.name, 'ARTWORK', 'GameFontNormal')
@@ -303,27 +296,27 @@ function TSWL.options.SetupPanel()
         widgetFrame:SetHeight(20)
         widgetFrame:SetAutoFocus(false)
 
-        widgetFrame:EnableKeyboard(true)
-        widgetFrame:SetScript('OnKeyUp', widgetOnKeyUp)
         widgetFrame:SetScript('OnTextChanged', widgetOnTextChanged)
 
-        if widget.autocomplete then
-            InlineAutocompleteLib:RegisterEditBox(widgetFrame, widget.autocomplete.inputDelimiter)
-        end
-
         if widgetFrame then
-            if widget.tooltip then
+            if widget.tooltip then -- add tooltip
                 widgetFrame.tooltip = widget.tooltip
+
                 widgetFrame:SetScript('OnEnter', TSWLOptionsPanel_ShowTooltip)
                 widgetFrame:SetScript('OnLeave', TSWLOptionsPanel_HideTooltip)
             end
 
-            -- Establish cross-references
+            if widget.autocomplete then -- setup autocomplete
+                InlineAutocompleteLib:RegisterEditBox(widgetFrame, widget.autocomplete.inputDelimiter)
+            end
+
+            -- establish cross-references
             widgetFrame.widget = widget
             widget.widgetFrame = widgetFrame
         end
     end
 
+    -- called on profession changed
     function professionPanel.refresh()
         UIDropDownMenu_SetText(professionDropdown, TSWLOptionsPanel.selectedProfession)
 
@@ -370,7 +363,7 @@ function TSWL.options.SetupPanel()
 
     _G['TSWLOptionsPanelCheckButtonAutocomplete']:SetChecked(TSWL_CharacterConfig.enableAutocomplete) -- set autocomplete
 
-    -- Display the current version in the title
+    -- display the current version in the title
     _G['TSWLOptionsPanelTitle']:SetText('TradeSkill|cffff7effWhisper|rLookup |cff888888v' .. GetAddOnMetadata('TradeSkillWhisperLookup', 'Version'))
 
     panel.name = 'TradeSkillWhisperLookup'
@@ -378,7 +371,9 @@ function TSWL.options.SetupPanel()
         professionPanel.refresh()
     end
 
-    InterfaceOptions_AddCategory(panel)
+    InlineAutocompleteLib:SetBindings('TAB', 'SHIFT+TAB', 'CTRL+TAB', 'ALT') -- set bindings for autocomplete
+
+    InterfaceOptions_AddCategory(panel) -- add to interface addons section
 
     for k, v in pairs(TSWL_CharacterConfig.professions) do -- preselect first profession
         if not TSWLOptionsPanel.selectedProfession then
